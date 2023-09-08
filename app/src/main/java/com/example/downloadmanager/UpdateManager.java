@@ -176,6 +176,7 @@ public class UpdateManager {
         try {
             File apkFile = new File(savePath + "/" + saveFileName);
             if (!apkFile.exists()) {
+                Log.e("apkfile","file"+apkFile);
                 return;
             }
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -195,8 +196,8 @@ public class UpdateManager {
                 intent.setDataAndType(Uri.parse("file://" + apkFile),
                         "application/vnd.android.package-archive");
             }
-
             mContext.startActivity(intent);
+            Log.e("TAG","打开路径"+intent);
         } catch (Exception e) {
             Log.e("","安装apk="+e);
         }

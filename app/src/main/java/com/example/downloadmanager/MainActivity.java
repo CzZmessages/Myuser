@@ -36,9 +36,12 @@ import android.widget.Toast;
 
 import com.example.downloadmanager.utils.NetworkSpeedUtils;
 import com.example.downloadmanager.utils.OSSService;
+import com.example.downloadmanager.utils.OssActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,10 +81,7 @@ public class MainActivity extends AppCompatActivity {
         btn_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               ossService=new OSSService(MainActivity.this);
-               ossService.initOSS();
-               ossService.downloadOSSObject();
-
+            startActivity(new Intent(MainActivity.this, OssActivity.class));
             }
         });
 

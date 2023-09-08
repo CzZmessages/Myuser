@@ -49,6 +49,7 @@
         </activity>
 
         <activity android:name=".Progress" />
+        <activity android:name=".utils.OssActivity"/>
         <!--定位apk-->
         <provider
             android:name="androidx.core.content.FileProvider"

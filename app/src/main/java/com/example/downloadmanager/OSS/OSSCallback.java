@@ -18,4 +18,8 @@ public interface OSSCallback{
      * @warning 警告
      */
     public void getDownloadProgress(long _progress);
+
+  public  void ossStart();
+  public  void ossnError(Throwable throwable);
+   public  void ossnComplete();
 }

@@ -190,12 +190,7 @@ public class OSSService {
         ///< 宋涛 2023/9/6 15:08构造下载文件请求。依次填写Bucket名称（例如examplebucket）和Object完整路径（例如exampledir\exampleobject.txt）。Object完整路径中不能包含Bucket名称。
         GetObjectRequest get = new GetObjectRequest(bucket_name_, _oss_obj_url);
 
-        get.setProgressListener(new OSSProgressCallback<GetObjectRequest>() {
-            @Override
-            public void onProgress(GetObjectRequest request, long currentSize, long totalSize) {
-                Log.e("Progress:","总"+currentSize+"小"+totalSize);
-            }
-        });
+    callback_.ossStart();
         oss_.asyncGetObject(get, new OSSCompletedCallback<GetObjectRequest, GetObjectResult>() {
             @Override
             public void onSuccess(GetObjectRequest request, GetObjectResult result) {
@@ -211,7 +206,7 @@ public class OSSService {
                             readCount += result.getObjectContent().read(buffer, readCount,
                                     (int) length - readCount);
                             ///< 宋涛 2023/9/6 19:40 将oss下载文件进度通过回调接口给外部使用
-                            download_progress=readCount/length;
+                            download_progress=(int)((float)readCount/length)*100;
                             callback_.getDownloadProgress(download_progress);
                         } catch (Exception e) {
                             OSSLog.logInfo(e.toString());
@@ -224,8 +219,9 @@ public class OSSService {
                         fout.close();
                     } catch (Exception e) {
                         OSSLog.logInfo(e.toString());
+                        callback_.ossnError(e);
                     }
-                }
+                }callback_.ossnComplete();
             }
 
             @Override

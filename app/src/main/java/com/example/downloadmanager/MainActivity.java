@@ -45,7 +45,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btn_1,btn_2,btn_3;
+    private Button btn_1,btn_2,btn_3,btn_4;
     private TextView tv_speed,broad_tv;
     private OSSService ossService;
 
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         btn_1=findViewById(R.id.btn_1);
         btn_2=findViewById(R.id.btn_2);
         btn_3=findViewById(R.id.btn_3);
+        btn_4=findViewById(R.id.btn_4);
         tv_speed=findViewById(R.id.speed);
         broad_tv=findViewById(R.id.Brod);
         broad_tv.setText("此次放置一个’便‘量");
@@ -82,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
             startActivity(new Intent(MainActivity.this, OssActivity.class));
+            }
+        });
+        btn_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SufViewActivity.class));
             }
         });
 

@@ -14,7 +14,7 @@
     />
     <TextView
         android:layout_width="800px"
-        android:layout_height="800px"
+        android:layout_height="400px"
         app:layout_constraintTop_toBottomOf="@id/btn_oss"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@id/t1"
         android:max="100"
         android:layout_marginTop="20px"
-        android:layout_marginLeft="700px"
+        android:layout_marginLeft="400px"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

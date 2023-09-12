@@ -41,12 +41,29 @@ public class OssActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 com.example.downloadmanager.OSS.OSSService oss = new OSSService(getApplicationContext());
-                oss.prepareOSS("STS.NT5nyHmLkUG6Frc5FXuvRSsv1","2N9HBedxapC5NXkJgBA1L4mYtGzFJsZu1o6Q2d6ZWrEH", "CAIS8AF1q6Ft5B2yfSjIr5eAJcP8gJNK4oXdRFTS0UYNefl+vLbd0zz2IHhMf3dqA+kasv8zn2xV5/YZlqprQpMdlMFHoQQpvPpt6gqET9frma7ctM4p6vCMHWyUFGSIvqv7aPn4S9XwY+qkb0u++AZ43br9c0fJPTXnS+rr76RqddMKRAK1QCNbDdNNXGtYpdQdKGHaOITGUHeooBKJUBI35FYh1z0utvngmZ3G0HeE0g2mkN1yjp/qP52pY/NrOJpCSNqv1IV0DPGZiHUOsUITqPst0PcYpGaX5cv7AkhM7g2bdu3P6Zh3JQNpyGOkkzarBJIagAF8j/HApZZPmWQxVnnz+6k2qdeV7CsXrUfzxEhI9skmagSVzUP0ydbSFQJm469KImNGJOJmyccxMld4g042IGMfSgYLm162dsTw3+edEDey8zE9ei1iLYiXkgqPSdy7J6JWe0B67aDCwNFB0Jg0gyNfowx9yIYPl6+eO3btsfieASAA", new OSSCallback() {
+                oss.prepareOSS("STS.NSuZ7moA98UC6iDwzZvh5LGcs",
+                        "2A2ceJQjwbzSYzT3hx6viuJ4Cy4ZpHu3wH2LANVZ6h1x",
+                        "CAIS7wF1q6Ft5B2yfSjIr5DAEY3Zgp4Yj5eoNE/1k3oPeucZo4LIkTz2IHhMf3dqA+kasv8zn2xV5/YZlqtjU8fnnNESrZIigK5M+CaNPqDj2aXsn5Fm5bShHW+McW2ZuObZf+T+Sv7EZ/6pcCqqvyRvwLz8B17ANh7fRv/vs5N8ackNVQSVdCdPAMwsRjFvs8gHL3DcR53PW1zI+jOMVBU25lci1zIgtPvkkpemh0CA3AGg+Ig8vJ/sJ5WoVc5oMapkXs29tO4MLfKZi3AKsUEWqPwq1/AZqGecpLecEkRc+wjDNPHPt8VmIB/XrTayg0HsxhqAAZs5tvvdJbL3FUs1DqxV4QvIwZv2+l3FIhNNFxqauPW1d8zQfczyS6dSxgUvop/vFMSRTwRwKCFqIOqhxkdQFWuC2ClgbyJhu2OiFKY6iaDMy46ucLjuew1rH7xyfL25FY9Lc6L6qjaGu7wNoIXYzgEau+6OO5GlXzqIOObKwdTJIAA=", new OSSCallback() {
                     @Override
                     public void getDownloadProgress(long _progress) {
                         updateProgress(_progress);
                     }
-                },"");
+
+                            @Override
+                            public void ossStart() {
+                                Toast.makeText(OssActivity.this, "开始",Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void ossnError(Throwable throwable) {
+
+                            }
+
+                            @Override
+                            public void ossnComplete() {
+
+                            }
+                        },"");
                 oss.download("output/song/S1693966217518010000.ayp",  savePath+"/"+"S1693966217518010000.ayp");
             }
         });

@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.hongri.multimedia"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a"
+        }
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+//    sourceSets.main {
+//        jni.srcDirs = []//disable automatic ndk-build call
+//        jniLibs.srcDirs = ['libs']
+//    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs/arm64-v8a', include: ['*.so'])
+//    implementation fileTree(dir: 'libs/armeabi-v7a', include: ['*.so'])
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'org.jetbrains:annotations:15.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+//    implementation 'com.hjq:xxpermissions:9.8'
+    implementation 'com.github.getActivity:XXPermissions:18.65'
+    // 多媒体播放器
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.0'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.15.0'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.15.0'
+    implementation 'com.google.android.exoplayer:exoplayer-transformer:2.15.0'
+    implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.15.0'
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.15.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'//retrofit2网络请求框架
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'//gson解析框架
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation 'com.blankj:utilcodex:1.28.4'
+    //Rxjava
+    api "io.reactivex.rxjava3:rxjava:3.0.4"
+    api 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    api  'com.google.code.gson:gson:2.6.+'
+    implementation 'com.arialyy.aria:core:3.8.15'
+    annotationProcessor 'com.arialyy.aria:compiler:3.8.15'
+    implementation 'com.github.gkonovalov:android-vad:1.0.1'
+//    implementation 'com.github.gkonovalov.android-vad:webrtc:2.0.6'
+    //测试用的图标库
+//    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //implementation 'com.arialyy.aria:ftpComponent:3.8.15' # 如果需要使用ftp，请增加该组件
+    //implementation 'com.arialyy.aria:sftpComponent:3.8.15' # 如果需要使用ftp，请增加该组件
+    //implementation 'com.arialyy.aria:m3u8Component:3.8.15' # 如果需要使用m3u8下载功能，请增加该组件
+}

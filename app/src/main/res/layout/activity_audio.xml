@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".AudioActivity">
+
+    <TextView
+        android:id="@+id/messages_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Intelligent Assistant"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_messages"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_recycview_layout"
+        app:layout_constraintBottom_toTopOf="@+id/messages_send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messages_title" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messages_send"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintHeight_percent="0.1"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView_messages">
+
+        <EditText
+            android:id="@+id/send_editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_edtext"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:hint="Write a message"
+            android:maxLines="2"
+            android:padding="10dp"
+            android:scrollHorizontally="true"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sends"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.7" />
+
+        <!-- Button 占据30% -->
+        <TextView
+            android:id="@+id/sends"
+            android:layout_width="100dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_send"
+            android:drawableEnd="@mipmap/send"
+            android:padding="9dp"
+            android:text="Send"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/send_editText"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<TextView
+    android:id="@+id/states_ai_messages"
+    android:textSize="25sp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/messages_send"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/audio_layout"
+    />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/audio_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/states_ai_messages">
+
+        <Button
+            android:id="@+id/check_button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@mipmap/stop"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <com.hongri.multimedia.audio.widget.AudioRecordView
+            android:id="@+id/recordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints">
+
+            <com.hongri.multimedia.audio.widget.WaveView
+                android:id="@+id/mPaint_view"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_gravity="center" />
+
+            <com.hongri.multimedia.audio.widget.RecordButton
+                android:id="@+id/recordBtn"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:background="@mipmap/audio" />
+
+        </com.hongri.multimedia.audio.widget.AudioRecordView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

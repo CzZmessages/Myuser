@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FAFAFA"/> <!-- 气泡颜色，可以根据需要调整 -->
+
+    <corners android:radius="30dp"/> <!-- 圆角半径 -->
+
+    <padding
+        android:left="10dp"
+        android:right="10dp"
+        android:top="5dp"
+        android:bottom="5dp"/> <!-- 内边距 -->
+
+    <!-- 如果需要边框，可以添加stroke标签
+    <stroke
+        android:width="1dp"
+        android:color="#000000"/> -->
+</shape>

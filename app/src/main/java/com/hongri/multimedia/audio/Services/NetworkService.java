@@ -82,7 +82,7 @@ public class NetworkService {
                     .build();
 
             Request request = new Request.Builder()
-                    .url(Constant.BASE_URL + "api/chat")
+                    .url(Constant.BASE_URL_1 + "api/chat")
                     .post(requestBody)
                     .build();
 
@@ -128,7 +128,7 @@ public class NetworkService {
         executor.execute(() -> {
             RequestBody requestBody = RequestBody.create(gsonText, JSON);
             Request request = new Request.Builder()
-                    .url(Constant.BASE_URL + "api/chat/text")
+                    .url(Constant.BASE_URL_1 + "api/chat/text")
                     .post(requestBody)
                     .build();
 
@@ -179,7 +179,7 @@ public class NetworkService {
         executor.execute(() -> {
             RequestBody requestBody = RequestBody.create(gsonText, JSON);
             Request request = new Request.Builder()
-                    .url(Constant.BASE_URL + "api/chat/text")
+                    .url(Constant.BASE_URL_1 + "api/chat/text")
                     .post(requestBody)
                     .build();
 
@@ -201,6 +201,7 @@ public class NetworkService {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             LogUtils.e(TAG, "流式处理中" + line);
+                            Thread.sleep(50);
                             responseData.postValue(line);
                         }
                         isClent = true;
@@ -208,6 +209,8 @@ public class NetworkService {
                     } catch (IOException e) {
                         LogUtils.e("IOException during reading: " + e.getMessage());
                         responseData.postValue(Constant.REQUEST_FAIL_READ);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             } catch (IOException e) {

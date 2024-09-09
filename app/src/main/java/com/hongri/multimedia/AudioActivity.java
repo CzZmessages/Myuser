@@ -490,7 +490,7 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
     //-------------------------------------------------------------------------------------
     //下载初始化 ，网络框架初始化
     private void initReofit() {
-        retrofit = RetrofitClient.getClient(Constant.BASE_URL);
+        retrofit = RetrofitClient.getClient(Constant.BASE_URL_1);
         apiServic = retrofit.create(ApiServic.class);
     }
 
@@ -654,7 +654,7 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                 switch (result) {
                     case Constant.SUCCESS_READ:
                         //设置可交互
-                        states_messagesText(1);//SUCCESS_READ:
+                        states_messagesText(6);//SUCCESS_READ:
                         answerBuilder.setLength(0);
                         setEnableSendAndEdT();
                         break;

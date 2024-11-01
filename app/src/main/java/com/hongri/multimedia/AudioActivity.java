@@ -619,6 +619,10 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         if(!result.trim().isEmpty()){
           switch (result){
               case Constant.CLIENT_SUCCESS:
+                  ResponseData responseData = gson.fromJson(result, ResponseData.class);
+                  addUrlToQueue(responseData.getUrl());
+                  //将数据传递给View
+                  updateRecycleViewItem(responseData.getItem_text(), responseData.getAsk_text());
                   break;
               case Constant.CLIENT_ERROR:
                   break;

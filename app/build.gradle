@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "com.hongri.multimedia"
@@ -34,6 +34,13 @@ android {
 //        jni.srcDirs = []//disable automatic ndk-build call
 //        jniLibs.srcDirs = ['libs']
 //    }
+    android.applicationVariants.all{ variant ->
+        variant.outputs.all{
+            def createTime = new Date().format("YYYYMMddhhmm", TimeZone.getTimeZone("GMT+08:00"))
+            def fileName = "${project.name}_${buildType.name}_v${defaultConfig.versionName}_${createTime}.apk"
+            outputFileName = fileName
+        }
+    }
 }
 
 dependencies {

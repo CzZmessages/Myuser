@@ -3,23 +3,33 @@ package com.hongri.multimedia;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,8 +58,11 @@ import com.hongri.multimedia.audio.Services.NetworkService;
 import com.hongri.multimedia.audio.listener.RecordStateListener;
 import com.hongri.multimedia.audio.state.AudioPlayStatus;
 import com.hongri.multimedia.bean.Message;
+import com.hongri.multimedia.bean.MsgData;
 import com.hongri.multimedia.bean.ResponseData;
 import com.hongri.multimedia.bean.ResponseTextData;
+import com.hongri.multimedia.bean.UserMsgBean;
+import com.hongri.multimedia.bean.UserMsgData;
 import com.hongri.multimedia.retrofit.ApiServic;
 import com.hongri.multimedia.util.AppUtil;
 import com.hongri.multimedia.audio.state.RecordConfig;
@@ -59,6 +72,7 @@ import com.hongri.multimedia.audio.widget.AudioPlayView;
 import com.hongri.multimedia.audio.widget.AudioRecordView;
 import com.hongri.multimedia.util.Constant;
 import com.hongri.multimedia.util.Msg;
+import com.hongri.multimedia.util.QuickClickListener;
 import com.hongri.multimedia.util.RetrofitClient;
 
 import java.io.File;
@@ -70,6 +84,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -82,10 +97,28 @@ import retrofit2.Retrofit;
 
 
 /**
- * Create by  on 2021/9/8
- * Description:音频Activity：
+ * Create by chenpengchi  on 2024/9/8
+ * Description:AudioActivity：
+ * *    ┏┓   ┏┓
+ * *   ┏┛┻━━━┛┻┓
+ * *   ┃       ┃
+ * *   ┃   ━   ┃
+ * *   ┃ ┳┛ ┗┳ ┃
+ * *   ┃       ┃
+ * *   ┃   ┻   ┃
+ * *   ┃       ┃
+ * *   ┗━┓   ┏━┛
+ * *     ┃   ┃神兽保佑
+ * *     ┃   ┃代码无BUG！
+ * *     ┃   ┗━━━┓
+ * *     ┃       ┣┓
+ * *     ┃       ┏┛
+ * *     ┗┓┓┏━┳┓┏┛
+ * *      ┃┫┫ ┃┫┫
+ * *      ┗┻┛ ┗┻┛
+ * * ━━━━━━神兽出没━━━━━━
  */
-public class AudioActivity extends AppCompatActivity implements View.OnClickListener {
+public class AudioActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = "AudioActivity";
     private AudioRecordView audioRecordView;
@@ -115,6 +148,8 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
     private Gson gson;
     private Deque<String> urlQueue;
     private List<String> dataList;
+    private ImageView my_user;
+    private PopupWindow popupWindow;
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     @Override
@@ -122,6 +157,7 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio);
         initView();
+        setOnClick();
         initRecyclerView();
         initListener();
         initializeExoPlayer();
@@ -129,6 +165,7 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
         setStatusBar();
         clearData();
         initReofit();
+        getEmail();
         LogUtils.e("===Activity创建");
     }
 
@@ -139,11 +176,11 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
         recordBtn = findViewById(R.id.recordBtn);
         recyclerView = findViewById(R.id.recyclerView_messages);
         sends = findViewById(R.id.sends);
+        my_user = findViewById(R.id.my_user);
         send_editText = findViewById(R.id.send_editText);
         check_button = findViewById(R.id.check_button);
         states_ai_messages = findViewById(R.id.states_ai_messages);
         messages_title = findViewById(R.id.messages_title);
-        messages_title.setOnClickListener(this);
         check_button.setOnClickListener(this);
         audioRecordView.setOnClickListener(this);
         recordBtn.setOnClickListener(this);
@@ -176,6 +213,7 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                 .permission(Permission.MANAGE_EXTERNAL_STORAGE);
 
     }
+
 
     private void initListener() {
         AudioRecordManager.getInstance().setRecordStateListener(new RecordStateListener() {
@@ -211,7 +249,8 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                         String filePath = SPUtils.getInstance().getString(Constant.SP_FILE_PATH);
                         LogUtils.e("语音地址:" + filePath);
                         inspectList();
-                        sendFileNew(filePath, messages);
+//                        sendFileNew(filePath, messages);
+                        sendNewFile(filePath,messages);
                         setEnableSendAndEdF();
                         states_messagesText(1);
                         check_button.setVisibility(View.VISIBLE);
@@ -257,6 +296,85 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
         CleanUtils.cleanInternalCache();
         CacheMemoryStaticUtils.clear();
     }
+
+    private void setOnClick() {
+
+        my_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popoWindows(v);
+//                getEmail();
+            }
+        });
+    }
+
+    private void getEmail() {
+        try {
+            //获取邮件信息
+            Call<ResponseBody> call = apiServic.getEmail(SPUtils.getInstance().getString("dataHeader"));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+                        String msg = response.body().string();
+                        UserMsgData data = gson.fromJson(msg, UserMsgData.class);
+                        SPUtils.getInstance().put("emal", data.getData().getEmail());
+                    } catch (IOException e) {
+                        LogUtils.e("==异常==" + e);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            LogUtils.e("=====>" + e);
+        }
+
+    }
+
+    private void popoWindows(View v) {
+        LogUtils.e("执行popo");
+        View view = LayoutInflater.from(v.getContext()).inflate(R.layout.popo_user_layout, null, false);
+        ConstraintLayout v1 = view.findViewById(R.id.v1);
+        ConstraintLayout v2 = view.findViewById(R.id.v2);
+        TextView user_tx = view.findViewById(R.id.user_tx);
+        TextView account_tx=view.findViewById(R.id.account_tx);
+        String user = SPUtils.getInstance().getString("user");
+        String emal=SPUtils.getInstance().getString("emal");
+        user_tx.setText(user);
+        account_tx.setText(emal);
+        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        popupWindow.setAnimationStyle(R.anim.anim_pop);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        v1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //user 操作
+            }
+        });
+        v2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //登出操作
+                popupWindow.dismiss();
+                SPUtils.getInstance().put("dataHeader", "");//置空chat_id
+                startActivity(new Intent(AudioActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+        popupWindow.showAsDropDown(v, 0, 40, Gravity.CLIP_VERTICAL);
+    }
+
 
     /**
      * 删除文件操作
@@ -370,10 +488,6 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                 check_button.setVisibility(View.GONE);
                 audioRecordView.setVisibility(View.VISIBLE);
                 checkFile();
-                break;
-            case R.id.messages_title:
-                //测试用的
-//                startActivity(new Intent(AudioActivity.this, MainActivity2.class));
                 break;
             default:
                 break;
@@ -490,7 +604,8 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
     //-------------------------------------------------------------------------------------
     //下载初始化 ，网络框架初始化
     private void initReofit() {
-        retrofit = RetrofitClient.getClient(Constant.BASE_URL_1);
+        retrofit = new RetrofitClient().getClient(Constant.BASE_AI);
+//        retrofit = RetrofitClient.getClient(Constant.AI_AUDIO);
         apiServic = retrofit.create(ApiServic.class);
     }
 
@@ -499,7 +614,22 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
             messages.clear();
         }
     }
+    private void sendNewFile(String filePath, List<Message> listMessages){
+     networkService.sendFileAndStreamNewResponse(filePath,listMessages).observe(this,result->{
+        if(!result.trim().isEmpty()){
+          switch (result){
+              case Constant.CLIENT_SUCCESS:
+                  break;
+              case Constant.CLIENT_ERROR:
+                  break;
+              case Constant.REQUEST_FAIL_READ:
+                  break;
 
+          }
+        }
+     });
+
+    }
     private void sendFileNew(String filePath, List<Message> listMessages) {
         itemTextBuilder.setLength(0);
         dataList.clear();
@@ -508,13 +638,15 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("file", "filename", RequestBody.create(MediaType.parse("audio/wav"), new File(filePath)))
                 .addFormDataPart("messages", messagesGson)
+                .addFormDataPart("chat_id", SPUtils.getInstance().getString("chat_id"))
                 .build();
-        Call<ResponseBody> call = apiServic.uploadFileAndMessages(requestBody);
+        String token = SPUtils.getInstance().getString("dataHeader");
+        LogUtils.e("携带token:" + token);
+        Call<ResponseBody> call = apiServic.uploadFileAndMessages(token, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    LogUtils.e("请求成功");
                     BufferedSource source = response.body().source();
                     try {
                         while (!source.exhausted()) {
@@ -555,12 +687,19 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                     }
                 } else {
                     LogUtils.e("请求失败！");
+                    runOnUiThread(() -> {
+                        Toast.makeText(AudioActivity.this, "请求失败，请检查是否有网络！", Toast.LENGTH_LONG).show();
+                    });
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 LogUtils.e(t.getMessage());
+                runOnUiThread(()->{
+                    states_ai_messages.setText(t.getMessage());
+//                    states_ai_messages.setTextColor(Color.parseColor(String.valueOf(R.color.red)));
+                });
                 Granted = false;
             }
         });
@@ -663,6 +802,9 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
                         states_messagesText(5);//CLIENT_ERROR
                         answerBuilder.setLength(0);
                         setEnableSendAndEdT();
+                        runOnUiThread(() -> {
+                            Toast.makeText(AudioActivity.this, "登录时效已过期，请重新登录！", Toast.LENGTH_LONG).show();
+                        });
                         break;
                     case Constant.REQUEST_FAIL_READ:
                         //请求失败
@@ -683,33 +825,33 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
     private void updateSendText(String content) {
         String nowTime = TimeUtils.getNowString();
         String nowMessages = SPUtils.getInstance(Constant.SEND_MESSAGES).getString(Constant.SEND_MESSAGES);
-     //数据处理
+        //数据处理
         if (content.indexOf("data:") != -1) {
             // 去除"data:"前缀并更新rawResponse
             content = content.substring(content.indexOf("data:") + "data:".length()).trim();
             LogUtils.e("line：===================》" + content);
             ResponseTextData data = gson.fromJson(content, ResponseTextData.class);
             answerBuilder.append(data.getMessage().getContent());
-            if(data.isDone()){
-                messages.add(new Message("assistant",answerBuilder.toString()));//服务器数据集
+            if (data.isDone()) {
+                messages.add(new Message("assistant", answerBuilder.toString()));//服务器数据集
             }
         }
-        LogUtils.e("历史问题:"+lastMessages+"    nowmeesgae"+nowMessages);
-       if(!nowMessages.equals(lastMessages)){
-           //添加新问题视图
-           LogUtils.e("1");
-           msgList.add(new Msg(answerBuilder.toString(),nowTime,Msg.TYPE_RECEIVED));//视图数据集
-           msgAdapter.notifyItemChanged(msgList.size()-1);
-            recyclerView.smoothScrollToPosition(msgList.size()-1);
-           lastMessages=nowMessages;
-       }else{
-           //更新视图
-           LogUtils.e("2");
-           msgList.set(msgList.size()-1,new Msg(answerBuilder.toString(),nowTime,Msg.TYPE_RECEIVED));
-            LogUtils.e("字符串:"+answerBuilder.toString());
-           msgAdapter.notifyDataSetChanged();
-           recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
-       }
+        LogUtils.e("历史问题:" + lastMessages + "    nowmeesgae" + nowMessages);
+        if (!nowMessages.equals(lastMessages)) {
+            //添加新问题视图
+            LogUtils.e("1");
+            msgList.add(new Msg(answerBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));//视图数据集
+            msgAdapter.notifyItemChanged(msgList.size() - 1);
+            recyclerView.smoothScrollToPosition(msgList.size() - 1);
+            lastMessages = nowMessages;
+        } else {
+            //更新视图
+            LogUtils.e("2");
+            msgList.set(msgList.size() - 1, new Msg(answerBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));
+            LogUtils.e("字符串:" + answerBuilder.toString());
+            msgAdapter.notifyDataSetChanged();
+            recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
+        }
     }
 
     //-------------------------------------------------------------------------------------
@@ -735,7 +877,7 @@ public class AudioActivity extends AppCompatActivity implements View.OnClickList
             showNormalDialog();
         } else {
             LogUtils.e("非首次安装");
-            showNormalDialog();
+//            showNormalDialog();
         }
     }
 

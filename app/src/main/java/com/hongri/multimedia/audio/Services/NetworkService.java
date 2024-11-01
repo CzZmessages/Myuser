@@ -6,9 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.hongri.multimedia.bean.Message;
 import com.hongri.multimedia.bean.ResponseData;
+import com.hongri.multimedia.bean.TextSendBean;
 import com.hongri.multimedia.util.Constant;
 
 import org.json.JSONException;
@@ -47,16 +49,19 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @description: TODO
  * @date $ $
  */
+
 public class NetworkService {
 
     private static final String TAG = "NetworkService";
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private OkHttpClient client;
     private OkHttpClient client1;
+    private   Gson gson ;
     private boolean isClent = true;
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     public NetworkService() {
+        gson = new Gson();
         // 在构造函数中初始化OkHttpClient并设置超时参数
         client = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS) // 设置连接超时时间为60秒
@@ -82,7 +87,7 @@ public class NetworkService {
                     .build();
 
             Request request = new Request.Builder()
-                    .url(Constant.BASE_URL_1 + "api/chat")
+//                    .url(Constant.BASE_URL_1 + "api/chat")
                     .post(requestBody)
                     .build();
 
@@ -128,7 +133,7 @@ public class NetworkService {
         executor.execute(() -> {
             RequestBody requestBody = RequestBody.create(gsonText, JSON);
             Request request = new Request.Builder()
-                    .url(Constant.BASE_URL_1 + "api/chat/text")
+//                    .url(Constant.BASE_URL_1 + "api/chat/text")
                     .post(requestBody)
                     .build();
 
@@ -170,16 +175,21 @@ public class NetworkService {
         return responseData;
     }
     public LiveData<String> sendText1(List<Message> messages) {
-        Gson gson = new Gson();
+
         final MutableLiveData<String> responseData = new MutableLiveData<>();
 
-        String gsonText = "{\"messages\":" + gson.toJson(messages) + "}";
+       String msg=messages.get(messages.size()-1).getContent();
+       String chat_id= SPUtils.getInstance().getString("chat_id");
+        TextSendBean text=new TextSendBean(msg,chat_id);
+       String gsonText=gson.toJson(text);
+//        String gsonText = "{\"messages\":" + "什么是mid" + ",\"chat_id\":"+chat_id+"}";
         LogUtils.e("messages:" + gsonText);
 
         executor.execute(() -> {
             RequestBody requestBody = RequestBody.create(gsonText, JSON);
             Request request = new Request.Builder()
-                    .url(Constant.BASE_URL_1 + "api/chat/text")
+                    .url(Constant.BASE_AI + "api/voice_stream/chat")
+                    .header("AUTHORIZATION", SPUtils.getInstance().getString("dataHeader"))
                     .post(requestBody)
                     .build();
 
@@ -221,6 +231,60 @@ public class NetworkService {
 
         return responseData;
     }
+    public MutableLiveData<String> sendFileAndStreamNewResponse(String filePath, List<Message> messages) {
+        final MutableLiveData<String> responseData = new MutableLiveData<>();
+        executor.execute(() -> {
+            Gson gson = new Gson();
+            String messagesGson = gson.toJson(messages);
+            LogUtils.e("录音字符串:" + messagesGson);
+
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("file", "filename", RequestBody.create(MediaType.parse("audio/wav"), new File(filePath)))
+                    .addFormDataPart("messages", messagesGson)
+                    .addFormDataPart("chat_id", SPUtils.getInstance().getString("chat_id"))
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(Constant.BASE_AI + "api/voice_stream/asr_tts_stream")
+                    .header("AUTHORIZATION", SPUtils.getInstance().getString("dataHeader"))
+                    .post(requestBody)
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    responseData.postValue(Constant.CLIENT_ERROR); // 发送null表示错误
+                    LogUtils.e("===client====CLIENT_ERROR=======");
+                    return;
+                } else {
+                    responseData.postValue(Constant.CLIENT_SUCCESS);
+                    LogUtils.e("====client===CLIENT_SUCCESS=======");
+                }
+
+                if (response.body() != null) {
+                    try (BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(response.body().byteStream(), StandardCharsets.UTF_8))) {
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            LogUtils.e(TAG, "流式处理中" + line);
+                            Thread.sleep(50); // 模拟延迟，可以根据实际需求调整
+                            responseData.postValue(line);
+                        }
+                    }
+                }
+
+                // 数据读取完毕，发布最终结果
+                responseData.postValue(Constant.SUCCESS_READ);
+            } catch (IOException | InterruptedException e) {
+                LogUtils.e(TAG, "Request failed", e);
+                responseData.postValue(Constant.REQUEST_FAIL_READ); // 发送null表示错误
+            }
+        });
+
+        return responseData;
+    }
+
 
     public void startInput() {
       isClent=true;

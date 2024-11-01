@@ -30,11 +30,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MainActivity2"
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:largeHeap="true"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity2"
             android:allowBackup="true"
             android:requestLegacyExternalStorage="true"
             android:usesCleartextTraffic="true">
-            ></activity>
+            >
+        </activity>
         <activity android:name=".VideoActivity">
 
             <!--
@@ -48,14 +64,9 @@
         <activity
             android:name=".AudioActivity"
             android:configChanges="orientation|screenSize"
-            android:largeHeap="true"
             android:hardwareAccelerated="true"
+            android:largeHeap="true"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
 

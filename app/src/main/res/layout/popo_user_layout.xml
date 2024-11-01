@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+   >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="130dp"
+        android:layout_height="92dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@drawable/popo_bg">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/v1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/v2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/head_img"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_marginLeft="7.5dp"
+                android:src="@mipmap/acount"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/user_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Rachel"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/head_img"
+                app:layout_constraintTop_toTopOf="@id/head_img" />
+
+            <TextView
+                android:id="@+id/account_tx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="123@163.com"
+                android:textSize="7sp"
+                app:layout_constraintLeft_toRightOf="@id/head_img"
+                app:layout_constraintTop_toBottomOf="@id/user_tx" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/v2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/v1">
+
+            <ImageView
+                android:id="@+id/exit_btn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="7.5dp"
+                android:src="@mipmap/exit"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Exit"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/exit_btn"
+                app:layout_constraintLeft_toRightOf="@+id/exit_btn"
+                app:layout_constraintTop_toTopOf="@+id/exit_btn" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

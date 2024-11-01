@@ -70,7 +70,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.left_msg.setText(msg.getContent());
             holder.message_time_left.setText(msg.getTime());
-            holder.ai_head.setImageResource(R.mipmap.ai_2);
+            holder.ai_head.setImageResource(R.mipmap.ais);
             //注意此处隐藏右面的消息布局用的是 View.GONE
             holder.rightLayout.setVisibility(View.GONE);
 

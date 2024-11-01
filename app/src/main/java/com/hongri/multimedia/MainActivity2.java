@@ -195,8 +195,8 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void initReofit() {
-        retrofit = RetrofitClient.getClient(Constant.BASE_URL);
-        apiServic = retrofit.create(ApiServic.class);
+//        retrofit = RetrofitClient.getClient(Constant.BASE_URL);
+//        apiServic = retrofit.create(ApiServic.class);
     }
 
     private void requestFile(String filePath, List<Message> listMessages) {
@@ -207,7 +207,7 @@ public class MainActivity2 extends AppCompatActivity {
                 .addFormDataPart("file", "filename", RequestBody.create(MediaType.parse("audio/wav"), new File(filePath)))
                 .addFormDataPart("messages", messagesGson)
                 .build();
-        Call<ResponseBody> call = apiServic.uploadFileAndMessages(requestBody);
+//        Call<ResponseBody> call = apiServic.uploadFileAndMessages(requestBody);
 //        call.enqueue(new Callback<ResponseBody>() {
 //            @Override
 //            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -242,56 +242,56 @@ public class MainActivity2 extends AppCompatActivity {
 //                LogUtils.e(t.getMessage());
 //            }
 //        });
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    LogUtils.e("请求成功");
-                    BufferedSource source = response.body().source();
-                    try {
-                        while (!source.exhausted()) {
-                            String line = source.readUtf8Line();
-                            if (line != null) {
-                                if (line.indexOf("data:") != -1) {
-                                    // 去除"data:"前缀并更新rawResponse
-                                    line = line.substring(line.indexOf("data:") + "data:".length()).trim();
-                                    LogUtils.e("line：===================》" + line);
-                                    dataList.add(line);
-                                }
-                            }
-                        }
-                        for (String jsonData : dataList) {
-                            ResponseData responseData = gson.fromJson(jsonData.trim(), ResponseData.class);
-                            if (responseData.getItem_text() != null && !responseData.getItem_text().isEmpty() &&
-                                    responseData.getUrl() != null && !responseData.getUrl().isEmpty()
-                            ) {// && responseData.getAsk_text() != null && !responseData.getAsk_text().isEmpty()
-
-                                LogUtils.e("数据:" + responseData.getItem_text(), "ask_text:" + responseData.getAsk_text(), "url:" + responseData.getUrl());
-                                String ms = dataBuilder.append(responseData.getItem_text()).toString();
-                                addUrlToQueue(responseData.getUrl());
-                                message_ed.setText(ms);
-                            }
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            source.close(); // 关闭source，释放资源
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else {
-                    LogUtils.e("请求失败！");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                LogUtils.e(t.getMessage());
-            }
-        });
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                if (response.isSuccessful()) {
+//                    LogUtils.e("请求成功");
+//                    BufferedSource source = response.body().source();
+//                    try {
+//                        while (!source.exhausted()) {
+//                            String line = source.readUtf8Line();
+//                            if (line != null) {
+//                                if (line.indexOf("data:") != -1) {
+//                                    // 去除"data:"前缀并更新rawResponse
+//                                    line = line.substring(line.indexOf("data:") + "data:".length()).trim();
+//                                    LogUtils.e("line：===================》" + line);
+//                                    dataList.add(line);
+//                                }
+//                            }
+//                        }
+//                        for (String jsonData : dataList) {
+//                            ResponseData responseData = gson.fromJson(jsonData.trim(), ResponseData.class);
+//                            if (responseData.getItem_text() != null && !responseData.getItem_text().isEmpty() &&
+//                                    responseData.getUrl() != null && !responseData.getUrl().isEmpty()
+//                            ) {// && responseData.getAsk_text() != null && !responseData.getAsk_text().isEmpty()
+//
+//                                LogUtils.e("数据:" + responseData.getItem_text(), "ask_text:" + responseData.getAsk_text(), "url:" + responseData.getUrl());
+//                                String ms = dataBuilder.append(responseData.getItem_text()).toString();
+//                                addUrlToQueue(responseData.getUrl());
+//                                message_ed.setText(ms);
+//                            }
+//
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } finally {
+//                        try {
+//                            source.close(); // 关闭source，释放资源
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                } else {
+//                    LogUtils.e("请求失败！");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                LogUtils.e(t.getMessage());
+//            }
+//        });
     }
 
     private void initializeExoPlayer() {

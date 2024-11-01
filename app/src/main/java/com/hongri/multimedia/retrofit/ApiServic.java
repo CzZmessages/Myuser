@@ -10,6 +10,8 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -21,12 +23,16 @@ import retrofit2.http.Part;
  * @date $ $
  */
 public interface ApiServic {
-    @POST("api/chat")
-    Call<ResponseBody> uploadFileAndMessages(@Body RequestBody requestBody);
-    @POST("api/chat/text")
-    Call<ResponseBody> uploadTexts1(@Body RequestBody requestBody);
-    @POST("api/chat/text")
-    Call<String> sendText(@Body List<Message> messages);
-    @POST("api/chat/text")
-    Call<RequestBody> sendTexts11(@Body String data);
+    @POST("api/voice_stream/asr_tts_stream")
+//api/chat
+    Call<ResponseBody> uploadFileAndMessages(@Header("AUTHORIZATION") String headerValue, @Body RequestBody requestBody);
+
+    @POST("api/user/login")
+    Call<ResponseBody> login(@Body RequestBody requestBody);
+
+    @GET("api/voice_stream/asr_tts_stream")
+    Call<ResponseBody> getChatId(@Header("AUTHORIZATION") String header);
+
+    @GET("api/user")
+    Call<ResponseBody> getEmail(@Header("AUTHORIZATION") String token);
 }

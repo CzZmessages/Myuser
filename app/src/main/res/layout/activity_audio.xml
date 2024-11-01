@@ -7,18 +7,38 @@
     android:fitsSystemWindows="true"
     tools:context=".AudioActivity">
 
-    <TextView
-        android:id="@+id/messages_title"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/title_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Intelligent Assistant"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/messages_title"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Answer Assistant"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/my_user"
+            android:layout_width="19dp"
+            android:layout_height="22dp"
+            android:layout_marginRight="20dp"
+            android:src="@mipmap/my"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_messages"
@@ -27,9 +47,9 @@
         android:background="@drawable/bg_recycview_layout"
         app:layout_constraintBottom_toTopOf="@+id/messages_send"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.7"
+        app:layout_constraintHeight_percent="0.55"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages_title" />
+        app:layout_constraintTop_toBottomOf="@+id/title_view" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messages_send"
@@ -74,16 +94,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-<TextView
-    android:id="@+id/states_ai_messages"
-    android:textSize="25sp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/messages_send"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/audio_layout"
-    />
+
+    <TextView
+        android:id="@+id/states_ai_messages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@id/audio_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messages_send" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/audio_layout"
         android:layout_width="wrap_content"

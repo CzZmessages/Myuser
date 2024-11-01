@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
-
+     <color name="mid01">#3366FF</color>
     <color name="audio_record_selector_pressed_color">#ff99dfc4</color>
     <color name="audio_record_selector_normal_color">#ff4ec899</color>
     <color name="audio_record_delete_red_color">#FFFF0000</color>

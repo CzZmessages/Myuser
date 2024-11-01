@@ -59,7 +59,7 @@ public class AudioRecorder {
     //编码
     private final static int AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     // 缓冲区字节大小
-    private int bufferSizeInBytes = 0;
+    private int bufferSizeInBytes = 500;
 
     //录音对象
     private AudioRecord audioRecord;

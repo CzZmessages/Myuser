@@ -43,7 +43,6 @@
             android:allowBackup="true"
             android:requestLegacyExternalStorage="true"
             android:usesCleartextTraffic="true">
-            >
         </activity>
         <activity android:name=".VideoActivity">
         </activity>

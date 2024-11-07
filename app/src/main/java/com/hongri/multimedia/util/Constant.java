@@ -1,5 +1,7 @@
 package com.hongri.multimedia.util;
 
+import com.hjq.permissions.Permission;
+
 /**
  * @author chenpengchi$
  * @version 1.0
@@ -21,5 +23,6 @@ public static final String BASE_AI="http://218.17.136.180:7887/";
     public static final String SEND_MESSAGES="send";
     public static final int CODE=200;
     public static final long TIME_DURATION=1000;
+  public static final   String[] permissionGroup=new String[]{Permission.MANAGE_EXTERNAL_STORAGE,Permission.RECORD_AUDIO} ;
 
 }

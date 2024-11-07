@@ -41,6 +41,7 @@ import com.blankj.utilcode.util.CacheMemoryStaticUtils;
 import com.blankj.utilcode.util.CleanUtils;
 import com.blankj.utilcode.util.FileUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.google.android.exoplayer2.MediaItem;
@@ -208,9 +209,6 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         gson = new Gson();
         //判定文件是否存在 不存在就创建
         FileUtils.createOrExistsDir(fileDir);
-        XXPermissions.with(this).permission(Permission.RECORD_AUDIO).permission(Permission.READ_MEDIA_AUDIO).permission(Permission.Group.CALENDAR)
-                .permission(Permission.WRITE_EXTERNAL_STORAGE).permission(Permission.READ_EXTERNAL_STORAGE)
-                .permission(Permission.MANAGE_EXTERNAL_STORAGE);
 
     }
 
@@ -250,7 +248,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         LogUtils.e("语音地址:" + filePath);
                         inspectList();
 //                        sendFileNew(filePath, messages);
-                        sendNewFile(filePath,messages);
+                        sendNewFile(filePath, messages);
                         setEnableSendAndEdF();
                         states_messagesText(1);
                         check_button.setVisibility(View.VISIBLE);
@@ -341,9 +339,9 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         ConstraintLayout v1 = view.findViewById(R.id.v1);
         ConstraintLayout v2 = view.findViewById(R.id.v2);
         TextView user_tx = view.findViewById(R.id.user_tx);
-        TextView account_tx=view.findViewById(R.id.account_tx);
+        TextView account_tx = view.findViewById(R.id.account_tx);
         String user = SPUtils.getInstance().getString("user");
-        String emal=SPUtils.getInstance().getString("emal");
+        String emal = SPUtils.getInstance().getString("emal");
         user_tx.setText(user);
         account_tx.setText(emal);
         popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -610,30 +608,54 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void inspectList() {
-        if (messages.size() >= 6) {
+        if (messages.size() >= 4) {
             messages.clear();
         }
     }
-    private void sendNewFile(String filePath, List<Message> listMessages){
-     networkService.sendFileAndStreamNewResponse(filePath,listMessages).observe(this,result->{
-        if(!result.trim().isEmpty()){
-          switch (result){
-              case Constant.CLIENT_SUCCESS:
-                  ResponseData responseData = gson.fromJson(result, ResponseData.class);
-                  addUrlToQueue(responseData.getUrl());
-                  //将数据传递给View
-                  updateRecycleViewItem(responseData.getItem_text(), responseData.getAsk_text());
-                  break;
-              case Constant.CLIENT_ERROR:
-                  break;
-              case Constant.REQUEST_FAIL_READ:
-                  break;
 
-          }
-        }
-     });
+    private void sendNewFile(String filePath, List<Message> listMessages) {
+        itemTextBuilder.setLength(0);
+        dataList.clear();
+        networkService.sendFileAndStreamNewResponse(filePath, listMessages).observe(this, result -> {
+            if (!result.trim().isEmpty()) {
+                switch (result) {
+                    case Constant.CLIENT_SUCCESS:
+                        states_messagesText(2);
+                        setEnableSendAndEdT();
+                        break;
+                    case Constant.CLIENT_ERROR:
+                        states_messagesText(5);//CLIENT_ERROR
+                        Granted = false;
+                        setEnableSendAndEdT();//异常处理
+                        break;
+                    case Constant.REQUEST_FAIL_READ:
+                        states_messagesText(5);//CLIENT_ERROR
+                        Granted = false;
+                        setEnableSendAndEdT();
+                        LogUtils.e("请求读取失败！");
+                        break;
+                    case Constant.SUCCESS_READ:
+                        Granted = false;
+                        states_messagesText(6);
+                        setEnableSendAndEdT();
+                        break;
+                    default:
+                        LogUtils.e("应该处理的问答信息：" + result);
+                        ResponseData responseData = gson.fromJson(result.trim(), ResponseData.class);
+                        if (!responseData.getUrl().trim().isEmpty()) {
+                            addUrlToQueue(responseData.getUrl());
+                            LogUtils.e("处理信息:" + responseData.getUrl());
+                        }
+                        updateRecycleViewItem(responseData.getItem_text(), responseData.getAsk_text());
+//                  //将数据传递给View
+                        break;
+
+                }
+            }
+        });
 
     }
+
     private void sendFileNew(String filePath, List<Message> listMessages) {
         itemTextBuilder.setLength(0);
         dataList.clear();
@@ -700,7 +722,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 LogUtils.e(t.getMessage());
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
                     states_ai_messages.setText(t.getMessage());
 //                    states_ai_messages.setTextColor(Color.parseColor(String.valueOf(R.color.red)));
                 });
@@ -722,12 +744,21 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
             msgAdapter.notifyItemInserted(msgList.size() - 1);
             lastSendText = ask_item;
         }
+        LinearLayoutManager ls = (LinearLayoutManager) recyclerView.getLayoutManager();
         //拼接字符串
         itemTextBuilder.append(itemText);
         msgList.set(msgList.size() - 1, new Msg(itemTextBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));
         // 更新RecyclerView以显示答案
         msgAdapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
+//        recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 检查是否已经滚动到底部
+                recyclerView.scrollBy(0,1000); // 滚动到底部
+                LogUtils.e("300ms后执行延迟刷新");
+            }
+        },300);
         setEnableSendAndEdT();
         states_messagesText(6);
         LogUtils.e("原本的消息：" + itemText, "====>接收消息" + itemTextBuilder.toString());
@@ -853,8 +884,11 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
             LogUtils.e("2");
             msgList.set(msgList.size() - 1, new Msg(answerBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));
             LogUtils.e("字符串:" + answerBuilder.toString());
-            msgAdapter.notifyDataSetChanged();
-            recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
+            msgAdapter.notifyItemChanged(msgList.size() - 1);
+            recyclerView.scrollBy(0, 20);
+//            recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
+//           ls.scrollToPositionWithOffset(msgList.size()-1,-150);
+
         }
     }
 

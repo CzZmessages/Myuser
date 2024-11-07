@@ -267,12 +267,13 @@ public class NetworkService {
 
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            Thread.sleep(50); // 模拟延迟，可以根据实际需求调整
+                            Thread.sleep(200); // 模拟延迟，可以根据实际需求调整
                             // 去除"data:"前缀并更新rawResponse
                             if(line!=null){
                                 if(line.indexOf("data:") != -1){
                                     line = line.substring(line.indexOf("data:") + "data:".length()).trim();
-                                    LogUtils.e("line：===================》" + line);
+//                                    ResponseData data= gson.fromJson(line, ResponseData.class);
+                                    LogUtils.e("line：===================》"+line);
                                     responseData.postValue(line);
                                 }
                             }

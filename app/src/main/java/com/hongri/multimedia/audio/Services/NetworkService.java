@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.blankj.utilcode.util.LogUtils;
+//import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.hongri.multimedia.bean.Message;
@@ -78,7 +78,7 @@ public class NetworkService {
         executor.execute(() -> {
             Gson gson = new Gson();
             String messagesGson = gson.toJson(messages);
-            LogUtils.e("录音字符串:" + messagesGson);
+//            LogUtils.e("录音字符串:" + messagesGson);
 
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -95,11 +95,11 @@ public class NetworkService {
                  InputStream inputStream = response.body().byteStream()) { // 将InputStream添加到try-with-resources中
                 if (!response.isSuccessful()) {
                     responseData.postValue(Constant.CLIENT_ERROR); // 发送null表示错误
-                    LogUtils.e("===client====CLIENT_ERROR=======");
+//                    LogUtils.e("===client====CLIENT_ERROR=======");
                     return;
                 } else {
                     responseData.postValue(Constant.CLIENT_SUCCESS);
-                    LogUtils.e("====client===CLIENT_SUCCESS=======");
+//                    LogUtils.e("====client===CLIENT_SUCCESS=======");
                 }
 
                 byte[] buffer = new byte[8192 * 10]; // 缓冲区大小可以根据需要调整
@@ -107,14 +107,14 @@ public class NetworkService {
 
                 while ((read = inputStream.read(buffer)) != -1) {
                     String chunk = new String(buffer, 0, read, StandardCharsets.UTF_8);
-                    LogUtils.e(TAG, "流式处理中" + chunk);
+//                    LogUtils.e(TAG, "流式处理中" + chunk);
                     responseData.postValue(chunk);
                 }
 
                 // 数据读取完毕，发布最终结果
                 responseData.postValue(Constant.SUCCESS_READ);
             } catch (IOException e) {
-                LogUtils.e(TAG, "Request failed", e);
+//                LogUtils.e(TAG, "Request failed", e);
                 responseData.postValue(Constant.REQUEST_FAIL_READ); // 发送null表示错误
             }
         });
@@ -128,7 +128,7 @@ public class NetworkService {
         final MutableLiveData<String> responseData = new MutableLiveData<>();
 
         String gsonText = "{\"messages\":" + gson.toJson(messages) + "}";
-        LogUtils.e("messages:" + gsonText);
+//        LogUtils.e("messages:" + gsonText);
 
         executor.execute(() -> {
             RequestBody requestBody = RequestBody.create(gsonText, JSON);
@@ -140,11 +140,11 @@ public class NetworkService {
             try (Response response = client1.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     responseData.postValue(Constant.CLIENT_ERROR);
-                    LogUtils.e(TAG, "=====连接异常，请检查网络链接或返回数据问题");
+//                    LogUtils.e(TAG, "=====连接异常，请检查网络链接或返回数据问题");
                     return;
                 } else {
                     responseData.postValue(Constant.CLIENT_SUCCESS);
-                    LogUtils.e("====client===CLIENT_SUCCESS=======");
+//                    LogUtils.e("====client===CLIENT_SUCCESS=======");
                 }
 
                 ResponseBody responseBody = response.body();
@@ -155,19 +155,19 @@ public class NetworkService {
 
                         while ((read = inputStream.read(buffer)) != -1) {
                             String chunk = new String(buffer, 0, read, StandardCharsets.UTF_8);
-                            LogUtils.e(TAG, "流式处理中" + chunk);
+//                            LogUtils.e(TAG, "流式处理中" + chunk);
                             responseData.postValue(chunk);
                             Thread.sleep(100); // 可选：如果需要延时处理
                         }
                         isClent = true;
                         responseData.postValue(Constant.SUCCESS_READ);
                     } catch (IOException e) {
-                        LogUtils.e("IOException during reading: " + e.getMessage());
+//                        LogUtils.e("IOException during reading: " + e.getMessage());
                         responseData.postValue(Constant.REQUEST_FAIL_READ);
                     }
                 }
             } catch (IOException | InterruptedException e) {
-                LogUtils.e("IOException" + e.getMessage());
+//                LogUtils.e("IOException" + e.getMessage());
                 responseData.postValue(Constant.REQUEST_FAIL_READ);
             }
         });
@@ -183,7 +183,7 @@ public class NetworkService {
         TextSendBean text=new TextSendBean(msg,chat_id);
        String gsonText=gson.toJson(text);
 //        String gsonText = "{\"messages\":" + "什么是mid" + ",\"chat_id\":"+chat_id+"}";
-        LogUtils.e("messages:" + gsonText);
+//        LogUtils.e("messages:" + gsonText);
 
         executor.execute(() -> {
             RequestBody requestBody = RequestBody.create(gsonText, JSON);
@@ -196,11 +196,11 @@ public class NetworkService {
             try (Response response = client1.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     responseData.postValue(Constant.CLIENT_ERROR);
-                    LogUtils.e(TAG, "=====连接异常，请检查网络链接或返回数据问题");
+//                    LogUtils.e(TAG, "=====连接异常，请检查网络链接或返回数据问题");
                     return;
                 } else {
                     responseData.postValue(Constant.CLIENT_SUCCESS);
-                    LogUtils.e("====client===CLIENT_SUCCESS=======");
+//                    LogUtils.e("====client===CLIENT_SUCCESS=======");
                 }
 
                 ResponseBody responseBody = response.body();
@@ -210,21 +210,21 @@ public class NetworkService {
 
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            LogUtils.e(TAG, "流式处理中" + line);
+//                            LogUtils.e(TAG, "流式处理中" + line);
                             Thread.sleep(50);
                             responseData.postValue(line);
                         }
                         isClent = true;
                         responseData.postValue(Constant.SUCCESS_READ);
                     } catch (IOException e) {
-                        LogUtils.e("IOException during reading: " + e.getMessage());
+//                        LogUtils.e("IOException during reading: " + e.getMessage());
                         responseData.postValue(Constant.REQUEST_FAIL_READ);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
             } catch (IOException e) {
-                LogUtils.e("IOException" + e.getMessage());
+//                LogUtils.e("IOException" + e.getMessage());
                 responseData.postValue(Constant.REQUEST_FAIL_READ);
             }
         });
@@ -236,7 +236,7 @@ public class NetworkService {
         executor.execute(() -> {
             Gson gson = new Gson();
             String messagesGson = gson.toJson(messages);
-            LogUtils.e("录音字符串:" + messagesGson);
+//            LogUtils.e("录音字符串:" + messagesGson);
 
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -254,11 +254,11 @@ public class NetworkService {
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     responseData.postValue(Constant.CLIENT_ERROR); // 发送null表示错误
-                    LogUtils.e("===client====CLIENT_ERROR=======");
+//                    LogUtils.e("===client====CLIENT_ERROR=======");
                     return;
                 } else {
                     responseData.postValue(Constant.CLIENT_SUCCESS);
-                    LogUtils.e("====client===CLIENT_SUCCESS=======");
+//                    LogUtils.e("====client===CLIENT_SUCCESS=======");
                 }
 
                 if (response.body() != null) {
@@ -273,7 +273,7 @@ public class NetworkService {
                                 if(line.indexOf("data:") != -1){
                                     line = line.substring(line.indexOf("data:") + "data:".length()).trim();
 //                                    ResponseData data= gson.fromJson(line, ResponseData.class);
-                                    LogUtils.e("line：===================》"+line);
+//                                    LogUtils.e("line：===================》"+line);
                                     responseData.postValue(line);
                                 }
                             }
@@ -284,7 +284,7 @@ public class NetworkService {
                 // 数据读取完毕，发布最终结果
                 responseData.postValue(Constant.SUCCESS_READ);
             } catch (IOException | InterruptedException e) {
-                LogUtils.e(TAG, "Request failed", e);
+//                LogUtils.e(TAG, "Request failed", e);
                 responseData.postValue(Constant.REQUEST_FAIL_READ); // 发送null表示错误
             }
         });

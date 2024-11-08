@@ -40,7 +40,7 @@ import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CacheMemoryStaticUtils;
 import com.blankj.utilcode.util.CleanUtils;
 import com.blankj.utilcode.util.FileUtils;
-import com.blankj.utilcode.util.LogUtils;
+//import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
@@ -167,7 +167,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         clearData();
         initReofit();
         getEmail();
-        LogUtils.e("===Activity创建");
+//        LogUtils.e("===Activity创建");
     }
 
     private void initView() {
@@ -245,7 +245,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         Log.d(TAG, "status ---> STATUS_FINISH");
 //                        checkFile();
                         String filePath = SPUtils.getInstance().getString(Constant.SP_FILE_PATH);
-                        LogUtils.e("语音地址:" + filePath);
+//                        LogUtils.e("语音地址:" + filePath);
                         inspectList();
 //                        sendFileNew(filePath, messages);
                         sendNewFile(filePath, messages);
@@ -273,7 +273,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 //        AudioRecordManager.getInstance().setRecordSoundSizeListener(new RecordSoundSizeListener() {
 //            @Override
 //            public void onSoundSize(int soundSize) {
-//                LogUtils.e(soundSize);
+////                LogUtils.e(soundSize);
 //            }
 //        });
 
@@ -318,7 +318,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         UserMsgData data = gson.fromJson(msg, UserMsgData.class);
                         SPUtils.getInstance().put("emal", data.getData().getEmail());
                     } catch (IOException e) {
-                        LogUtils.e("==异常==" + e);
+//                        LogUtils.e("==异常==" + e);
                     }
                 }
 
@@ -328,13 +328,13 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                 }
             });
         } catch (Exception e) {
-            LogUtils.e("=====>" + e);
+//            LogUtils.e("=====>" + e);
         }
 
     }
 
     private void popoWindows(View v) {
-        LogUtils.e("执行popo");
+//        LogUtils.e("执行popo");
         View view = LayoutInflater.from(v.getContext()).inflate(R.layout.popo_user_layout, null, false);
         ConstraintLayout v1 = view.findViewById(R.id.v1);
         ConstraintLayout v2 = view.findViewById(R.id.v2);
@@ -379,7 +379,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
      */
     public void checkFile() {
         //检查是否下载完毕
-        LogUtils.e(TAG, "取消播放");
+//        LogUtils.e(TAG, "取消播放");
         //取消当前播放语音，先删除原始文件,防止下一次开始的文件环境不干净
         FileUtils.deleteFilesInDir(getFilesDir() + "/file/audio/");
         //删除已下的回答文件
@@ -402,12 +402,12 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 //            } else {
 //                // 如果播放器当前未播放且没有准备好的状态，则准备播放器并开始播放
 //                if (exoPlayer.getMediaItemCount() == 0) {
-//                    LogUtils.e("播放器播放列表没有东西");
+////                    LogUtils.e("播放器播放列表没有东西");
 //                    return; // 或者根据需要执行其他操作，比如打印日志或提示信息
 //                }
 //            }
         } else {
-            LogUtils.e("还未初始化 无效操作！");
+//            LogUtils.e("还未初始化 无效操作！");
         }
 
     }
@@ -458,17 +458,17 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
             case R.id.recordBtn:
                 if (isRecording) {
                     Granted = true;
-                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==录音");
+//                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==录音");
 
                 } else {
-                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==结束录音");
+//                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==结束录音");
 
                 }
                 isRecording = !isRecording;
                 break;
             case R.id.sends:
                 //-
-                LogUtils.e("发送消息！");
+//                LogUtils.e("发送消息！");
 //                Granted = true;
 //                sends.setEnabled(false);
                 checkFile();
@@ -543,7 +543,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private void addDownloadedAudioToPlayer(String filePath) {
         String correctedPath = "file://" + filePath;
         MediaItem mediaItem = MediaItem.fromUri(Uri.parse(correctedPath));
-        LogUtils.e("播放地址:" + correctedPath);
+//        LogUtils.e("播放地址:" + correctedPath);
         exoPlayer.addMediaItem(mediaItem);
 
         // 检查播放器状态，如果已经准备好或正在播放，则直接播放新添加的媒体项
@@ -567,22 +567,22 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private final Player.EventListener playerEventListener = new Player.EventListener() {
         @Override
         public void onPlayerErrorChanged(@Nullable @org.jetbrains.annotations.Nullable PlaybackException error) {
-            LogUtils.e("Exoplayer====onPlayerErrorChanged");
+//            LogUtils.e("Exoplayer====onPlayerErrorChanged");
         }
 
         @Override
         public void onPlayerError(PlaybackException error) {
-            LogUtils.e("Exoplayer====onPlayerError");
+//            LogUtils.e("Exoplayer====onPlayerError");
         }
 
         @Override
         public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-            LogUtils.e("Exoplayer====播放列表发生改变！");
+//            LogUtils.e("Exoplayer====播放列表发生改变！");
         }
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            LogUtils.e("Exoplayer====播放完毕！");
+//            LogUtils.e("Exoplayer====播放完毕！");
             if (playbackState == Player.STATE_ENDED) {
                 // 播放列表结束，根据需求决定是否循环播放或停止
                 exoPlayer.stop();
@@ -632,7 +632,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         states_messagesText(5);//CLIENT_ERROR
                         Granted = false;
                         setEnableSendAndEdT();
-                        LogUtils.e("请求读取失败！");
+//                        LogUtils.e("请求读取失败！");
                         break;
                     case Constant.SUCCESS_READ:
                         Granted = false;
@@ -640,11 +640,11 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         setEnableSendAndEdT();
                         break;
                     default:
-                        LogUtils.e("应该处理的问答信息：" + result);
+//                        LogUtils.e("应该处理的问答信息：" + result);
                         ResponseData responseData = gson.fromJson(result.trim(), ResponseData.class);
                         if (!responseData.getUrl().trim().isEmpty()) {
                             addUrlToQueue(responseData.getUrl());
-                            LogUtils.e("处理信息:" + responseData.getUrl());
+//                            LogUtils.e("处理信息:" + responseData.getUrl());
                         }
                         updateRecycleViewItem(responseData.getItem_text(), responseData.getAsk_text());
 //                  //将数据传递给View
@@ -667,7 +667,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                 .addFormDataPart("chat_id", SPUtils.getInstance().getString("chat_id"))
                 .build();
         String token = SPUtils.getInstance().getString("dataHeader");
-        LogUtils.e("携带token:" + token);
+//        LogUtils.e("携带token:" + token);
         Call<ResponseBody> call = apiServic.uploadFileAndMessages(token, requestBody);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -681,7 +681,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                                 if (line.indexOf("data:") != -1) {
                                     // 去除"data:"前缀并更新rawResponse
                                     line = line.substring(line.indexOf("data:") + "data:".length()).trim();
-                                    LogUtils.e("line：===================》" + line);
+//                                    LogUtils.e("line：===================》" + line);
                                     dataList.add(line);
                                 }
                             }
@@ -691,7 +691,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                             if (responseData.getItem_text() != null && !responseData.getItem_text().isEmpty() &&
                                     responseData.getUrl() != null && !responseData.getUrl().isEmpty()
                             ) {// && responseData.getAsk_text() != null && !responseData.getAsk_text().isEmpty()
-                                LogUtils.e("数据:" + responseData.getItem_text(), "ask_text:" + responseData.getAsk_text(), "url:" + responseData.getUrl());
+//                                LogUtils.e("数据:" + responseData.getItem_text(), "ask_text:" + responseData.getAsk_text(), "url:" + responseData.getUrl());
                                 addUrlToQueue(responseData.getUrl());
                                 //将数据传递给View
                                 updateRecycleViewItem(responseData.getItem_text(), responseData.getAsk_text());
@@ -712,7 +712,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         }
                     }
                 } else {
-                    LogUtils.e("请求失败！");
+//                    LogUtils.e("请求失败！");
                     runOnUiThread(() -> {
                         Toast.makeText(AudioActivity.this, "请求失败，请检查是否有网络！", Toast.LENGTH_LONG).show();
                     });
@@ -721,7 +721,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                LogUtils.e(t.getMessage());
+//                LogUtils.e(t.getMessage());
                 runOnUiThread(() -> {
                     states_ai_messages.setText(t.getMessage());
 //                    states_ai_messages.setTextColor(Color.parseColor(String.valueOf(R.color.red)));
@@ -735,7 +735,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private void updateRecycleViewItem(String itemText, String ask_item) {
         String nowTime = TimeUtils.getNowString();
         if (!ask_item.equals(lastSendText)) {
-            LogUtils.e("=====》显示发送消息" + ask_item);
+//            LogUtils.e("=====》显示发送消息" + ask_item);
             msgList.add(new Msg(ask_item, nowTime, Msg.TYPE_SENT));//视图数据集  user
             messages.add(new Message("user", ask_item));//用户问的问题，发给服务端的数据集
             messages.add(new Message("assistant", itemText));//回答的问题，服务端数据集
@@ -756,12 +756,12 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
             public void run() {
                 // 检查是否已经滚动到底部
                 recyclerView.scrollBy(0,1000); // 滚动到底部
-                LogUtils.e("300ms后执行延迟刷新");
+//                LogUtils.e("300ms后执行延迟刷新");
             }
         },300);
         setEnableSendAndEdT();
         states_messagesText(6);
-        LogUtils.e("原本的消息：" + itemText, "====>接收消息" + itemTextBuilder.toString());
+//        LogUtils.e("原本的消息：" + itemText, "====>接收消息" + itemTextBuilder.toString());
     }
 
 
@@ -775,7 +775,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 //            @Override
 //            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 //                if (response.isSuccessful()) {
-//                    LogUtils.e("请求成功！");
+////                    LogUtils.e("请求成功！");
 //                    BufferedSource source = response.body().source();
 //                    try {
 //                        while (!source.exhausted()) {
@@ -784,14 +784,14 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 //                            if (line != null && line.indexOf("data:") != -1) {
 //                                // 去除"data:"前缀并更新rawResponse
 //                                line = line.substring(line.indexOf("data:") + "data:".length()).trim();
-//                                LogUtils.e("line：===================》" + line);
+////                                LogUtils.e("line：===================》" + line);
 //                                ResponseTextData data = gson.fromJson(line, ResponseTextData.class);
 //                                answerBuilder.append(data.getMessage().getContent());
 //                                updateSendText(answerBuilder.toString());
 //                            }
 //                        }
 //                        setEnableSendAndEdT();
-////                        LogUtils.e("拼接好的内容:" + answerBuilder.toString());
+//////                        LogUtils.e("拼接好的内容:" + answerBuilder.toString());
 ////                        updateSendText(answerBuilder.toString());
 //                    } catch (IOException | InterruptedException e) {
 //
@@ -814,7 +814,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 //
 //            @Override
 //            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                LogUtils.e("错误消息：" + t.getMessage());
+////                LogUtils.e("错误消息：" + t.getMessage());
 //                setEnableSendAndEdT();  //连接失败或其他错误
 //                Granted = false;
 //            }
@@ -824,7 +824,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private void sends(List<Message> messageList) {
         networkService.sendText1(messageList).observe(this, result -> {
             if (!result.isEmpty()) {
-                LogUtils.e("result____返回值:" + result);
+//                LogUtils.e("result____返回值:" + result);
                 switch (result) {
                     case Constant.SUCCESS_READ:
                         //设置可交互
@@ -846,7 +846,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         states_messagesText(5);//一样的
                         answerBuilder.setLength(0);
                         setEnableSendAndEdT();
-                        LogUtils.e("请求读取失败！");
+//                        LogUtils.e("请求读取失败！");
                         break;
                     default:
                         updateSendText(result);
@@ -864,26 +864,26 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         if (content.indexOf("data:") != -1) {
             // 去除"data:"前缀并更新rawResponse
             content = content.substring(content.indexOf("data:") + "data:".length()).trim();
-            LogUtils.e("line：===================》" + content);
+//            LogUtils.e("line：===================》" + content);
             ResponseTextData data = gson.fromJson(content, ResponseTextData.class);
             answerBuilder.append(data.getMessage().getContent());
             if (data.isDone()) {
                 messages.add(new Message("assistant", answerBuilder.toString()));//服务器数据集
             }
         }
-        LogUtils.e("历史问题:" + lastMessages + "    nowmeesgae" + nowMessages);
+//        LogUtils.e("历史问题:" + lastMessages + "    nowmeesgae" + nowMessages);
         if (!nowMessages.equals(lastMessages)) {
             //添加新问题视图
-            LogUtils.e("1");
+//            LogUtils.e("1");
             msgList.add(new Msg(answerBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));//视图数据集
             msgAdapter.notifyItemChanged(msgList.size() - 1);
             recyclerView.smoothScrollToPosition(msgList.size() - 1);
             lastMessages = nowMessages;
         } else {
             //更新视图
-            LogUtils.e("2");
+//            LogUtils.e("2");
             msgList.set(msgList.size() - 1, new Msg(answerBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));
-            LogUtils.e("字符串:" + answerBuilder.toString());
+//            LogUtils.e("字符串:" + answerBuilder.toString());
             msgAdapter.notifyItemChanged(msgList.size() - 1);
             recyclerView.scrollBy(0, 20);
 //            recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
@@ -911,10 +911,10 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         String packageName = getPackageName();
         boolean isFistInstall = isFirstInstall(this, packageName);
         if (isFistInstall) {
-            LogUtils.e("首次安装");
+//            LogUtils.e("首次安装");
             showNormalDialog();
         } else {
-            LogUtils.e("非首次安装");
+//            LogUtils.e("非首次安装");
 //            showNormalDialog();
         }
     }
@@ -1013,7 +1013,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         // 只有在队列非空时才开始下载
         if (!urlQueue.isEmpty()) {
             String url = urlQueue.poll();
-            LogUtils.e("要下载的url地址:" + url);
+//            LogUtils.e("要下载的url地址:" + url);
             String fileName = getFileName(url);
             Aria.download(this)
                     .load(url)
@@ -1036,14 +1036,14 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
     @Download.onTaskFail
     void onTaskFail(DownloadTask task) {
-        LogUtils.e(TAG, "下载出现异常" + task.getFilePath() + "  message" + task.getDownloadUrl());
+//        LogUtils.e(TAG, "下载出现异常" + task.getFilePath() + "  message" + task.getDownloadUrl());
         Toast.makeText(this, "下载语音出现异常", Toast.LENGTH_LONG).show();
 
     }
 
     @Download.onTaskComplete
     void taskComplete(DownloadTask task) {
-        LogUtils.e("下载完成的地址;" + task.getFilePath());
+//        LogUtils.e("下载完成的地址;" + task.getFilePath());
         startNextDownload();
         addDownloadedAudioToPlayer(task.getFilePath());
     }
@@ -1064,21 +1064,21 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtils.e("===Activity暂停");
+//        LogUtils.e("===Activity暂停");
 //        AudioPlayManager.setStatus(AudioPlayStatus.AUDIO_STOP);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LogUtils.e("===Activity停止");
+//        LogUtils.e("===Activity停止");
 //        AudioPlayManager.setStatus(AudioPlayStatus.AUDIO_STOP);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtils.e("===Activity销毁");
+//        LogUtils.e("===Activity销毁");
         AudioPlayManager.setStatus(AudioPlayStatus.AUDIO_STOP);
         AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_RELEASE);
         if (audioPlayView != null) {

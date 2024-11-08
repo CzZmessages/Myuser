@@ -41,27 +41,28 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
 /**
  * Create by chenpengchi  on 2024/9/8
  * Description:LoginActivity：
  * *    ┏┓   ┏┓
- *  *   ┏┛┻━━━┛┻┓
- *  *   ┃       ┃
- *  *   ┃   ━   ┃
- *  *   ┃ ┳┛ ┗┳ ┃
- *  *   ┃       ┃
- *  *   ┃   ┻   ┃
- *  *   ┃       ┃
- *  *   ┗━┓   ┏━┛
- *  *     ┃   ┃神兽保佑
- *  *     ┃   ┃代码无BUG！
- *  *     ┃   ┗━━━┓
- *  *     ┃       ┣┓
- *  *     ┃       ┏┛
- *  *     ┗┓┓┏━┳┓┏┛
- *  *      ┃┫┫ ┃┫┫
- *  *      ┗┻┛ ┗┻┛
- *  * ━━━━━━神兽出没━━━━━━
+ * *   ┏┛┻━━━┛┻┓
+ * *   ┃       ┃
+ * *   ┃   ━   ┃
+ * *   ┃ ┳┛ ┗┳ ┃
+ * *   ┃       ┃
+ * *   ┃   ┻   ┃
+ * *   ┃       ┃
+ * *   ┗━┓   ┏━┛
+ * *     ┃   ┃神兽保佑
+ * *     ┃   ┃代码无BUG！
+ * *     ┃   ┗━━━┓
+ * *     ┃       ┣┓
+ * *     ┃       ┏┛
+ * *     ┗┓┓┏━┳┓┏┛
+ * *      ┃┫┫ ┃┫┫
+ * *      ┗┻┛ ┗┻┛
+ * * ━━━━━━神兽出没━━━━━━
  */
 public class LoginActivity extends BaseActivity {
     private EditText username, password;
@@ -84,6 +85,7 @@ public class LoginActivity extends BaseActivity {
 //            Toast.makeText(LoginActivity.this,"正常检查登录状态",Toast.LENGTH_LONG).show();
 //            getChat_id();
 //        },1000);
+        addListener();
         getPermission();
     }
 
@@ -91,7 +93,7 @@ public class LoginActivity extends BaseActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         login_btn = findViewById(R.id.login_btn);
-        dialog=new RequestPermissionDialog(this);
+        dialog = new RequestPermissionDialog(this);
         login_btn.setOnClickListener(quickClickListener);
     }
 
@@ -128,7 +130,7 @@ public class LoginActivity extends BaseActivity {
             Toast.makeText(this, "请输入账号！", Toast.LENGTH_LONG).show();
             return;
         }
-        LogUtils.e("msg：" + u_name, p_word);
+//        LogUtils.e("msg：" + u_name, p_word);
         UserBean userBean = new UserBean(u_name, p_word);
         String userJson = gson.toJson(userBean);
         requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), userJson);
@@ -138,16 +140,16 @@ public class LoginActivity extends BaseActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     //登录成功
-                    LogUtils.e("success：" + response.message());
+//                    LogUtils.e("success：" + response.message());
                     try {
                         String msg = response.body().string();
                         MsgData data = gson.fromJson(msg, MsgData.class);
-                        LogUtils.e("code:" + data.getCode(), data.getMessage(), data.getData());
+//                        LogUtils.e("code:" + data.getCode(), data.getMessage(), data.getData());
                         if (data.getCode() == 200) {
                             Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_LONG).show();
-                            LogUtils.e("登录成功获取的token:" + data.getData());
+//                            LogUtils.e("登录成功获取的token:" + data.getData());
                             SPUtils.getInstance().put("dataHeader", data.getData());
-                            SPUtils.getInstance().put("user",userBean.getUsername());
+                            SPUtils.getInstance().put("user", userBean.getUsername());
                             getChat_id();
 
                         } else {
@@ -170,9 +172,9 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void getChat_id() {
-        String token = SPUtils.getInstance().getString("dataHeader","");
-        if(token.trim().isEmpty()){
-            Toast.makeText(LoginActivity.this,"Please to Login",Toast.LENGTH_LONG).show();
+        String token = SPUtils.getInstance().getString("dataHeader", "");
+        if (token.trim().isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Please to Login", Toast.LENGTH_LONG).show();
             return;
         }
         //发起请求
@@ -185,14 +187,14 @@ public class LoginActivity extends BaseActivity {
                     if (response.isSuccessful()) {
                         String msg = response.body().string();
                         MsgData data = gson.fromJson(msg, MsgData.class);
-                        if(data.getCode()==200){
-                            LogUtils.e("chat_id：" + data.getData());
+                        if (data.getCode() == 200) {
+//                            LogUtils.e("chat_id：" + data.getData());
                             SPUtils.getInstance().put("chat_id", data.getData());
                             startActivity(new Intent(LoginActivity.this, AudioActivity.class));
                             finish();
                         }
                     } else {
-                         LogUtils.e("fail login");
+//                        LogUtils.e("fail login");
                     }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -207,33 +209,50 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+
+    private void addListener() {
+        dialog.setOnClickItemCallBack(new RequestPermissionDialog.onClickItemCallBack() {
+            @Override
+            public void open() {
+                //打开权限组
+                //请求权限
+                XXPermissions.with(LoginActivity.this).permission(Constant.permissionGroup)//权限组
+                        .request(new OnPermissionCallback() {
+                            @Override
+                            public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+                                if (allGranted) {
+                                    Toast.makeText(LoginActivity.this, "权限已获取", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "权限未全部获取，这将会显著影响你的使用！", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
+                                if (doNotAskAgain) {
+                                    Toast.makeText(LoginActivity.this, "权限被永久拒绝，请手动授予相关权限！", Toast.LENGTH_LONG).show();
+                                } else {
+                                    dialog.show();
+                                    Toast.makeText(LoginActivity.this, "权限获取失败", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+            }
+        });
+    }
+
     @SuppressLint("WrongConstant")
     private void getPermission() {
-        if (!PermissionUtils.isGranted(Constant.permissionGroup)) {
-            //请求权限
+        if (!PermissionUtils.isGranted(Permission.Group.STORAGE)) {
             PermissionUtils.permission(Permission.Group.STORAGE).request();
-            XXPermissions.with(this).permission(Constant.permissionGroup)//权限组
-                    .request(new OnPermissionCallback() {
-                        @Override
-                        public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
-                            if(allGranted){
-                                Toast.makeText(LoginActivity.this,"权限已获取",Toast.LENGTH_LONG).show();
-                            }else{
-                                Toast.makeText(LoginActivity.this,"权限未全部获取，这将会显著影响你的使用！",Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
-                            if(doNotAskAgain){
-                                Toast.makeText(LoginActivity.this,"权限被永久拒绝，请手动授予相关权限！",Toast.LENGTH_LONG).show();
-                            }else{
-                                dialog.show();
-                                Toast.makeText(LoginActivity.this,"权限获取失败",Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-
+        } else {
+            Toast.makeText(LoginActivity.this, "存储权限已获取", Toast.LENGTH_LONG).show();
+        }
+        if(!PermissionUtils.isGranted(Constant.permissionGroup)){
+            if(SPUtils.getInstance().getBoolean("remember",false)){
+                return;
+            }
+            dialog.show();
         }
     }
 }

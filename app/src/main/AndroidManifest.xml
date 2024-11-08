@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:ignore="UnusedAttribute">
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
@@ -47,11 +48,14 @@
         <activity android:name=".VideoActivity">
         </activity>
         <activity
-            android:name=".AudioActivity"
+            android:name="com.hongri.multimedia.AudioActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true"
+
             android:largeHeap="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity android:name=".MainActivity">
         </activity>
     </application>

@@ -1,6 +1,8 @@
 package com.hongri.multimedia.bean;
 
-public class UserMsgBean {
+import java.io.Serializable;
+
+public class UserMsgBean implements Serializable {
     private String id;
     private String username;
     private boolean isVisitor;

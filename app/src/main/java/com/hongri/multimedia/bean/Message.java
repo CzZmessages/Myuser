@@ -2,13 +2,15 @@ package com.hongri.multimedia.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * @author $
  * @version 1.0
  * @description: TODO
  * @date $ $
  */
-public class Message {
+public class Message implements Serializable {
     private String role;
     private String content;
 

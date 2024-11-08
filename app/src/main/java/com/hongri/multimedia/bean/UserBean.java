@@ -1,6 +1,8 @@
 package com.hongri.multimedia.bean;
 
-public class UserBean {
+import java.io.Serializable;
+
+public class UserBean  implements Serializable {
     private String username;
     private String password;
 

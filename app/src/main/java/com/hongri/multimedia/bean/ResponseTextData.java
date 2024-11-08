@@ -1,12 +1,14 @@
 package com.hongri.multimedia.bean;
 
+import java.io.Serializable;
+
 /**
  * @author $
  * @version 1.0
  * @description: TODO
  * @date $ $
  */
-public class ResponseTextData {
+public class ResponseTextData  implements Serializable {
 
 
     private String model;

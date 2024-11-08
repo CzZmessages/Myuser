@@ -1,35 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/dialog_bg_layout">
-<TextView
-    android:id="@+id/tips"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    android:textStyle="bold"
-    android:textSize="15sp"
-    android:textColor="@color/black"
-    android:text="@string/title_sub"
-    android:layout_marginTop="10dp"
-    />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/tips"
+    android:background="@drawable/dialog_bg_layout"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/tips"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/warning"
+        android:text="@string/title_sub"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/misg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:textSize="15sp"
-        android:textColor="@color/black"
-        android:text="The function cannot be used properly \n if the permission is unavailable."
         android:gravity="center"
-        />
+        android:text="@string/msg"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tips" />
+
+    <CheckBox
+        android:id="@+id/st_to_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:button="@drawable/check_se"
+        android:text="No More reminders"
+        app:layout_constraintLeft_toLeftOf="@+id/open_permission"
+        app:layout_constraintTop_toBottomOf="@+id/misg" />
+
+    <Button
+        android:id="@+id/ok_btn"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_btn_ok"
+        android:text="OK"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/st_to_tips" />
+
+    <Button
+        android:id="@+id/open_permission"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_open"
+        android:text="GO TO OPEN"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/ok_btn"
+        app:layout_constraintLeft_toRightOf="@+id/ok_btn"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ok_btn" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

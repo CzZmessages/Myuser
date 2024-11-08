@@ -1,6 +1,8 @@
 package com.hongri.multimedia.bean;
 
-public class MsgData {
+import java.io.Serializable;
+
+public class MsgData implements Serializable {
     private int code;
     private String message;
     private String data;

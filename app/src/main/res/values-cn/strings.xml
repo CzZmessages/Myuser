@@ -4,4 +4,5 @@
     <string name="password">密码</string>
     <string name="login">登录</string>
     <string name="title_sub">提示</string>
+    <string name="msg">Some permissions are not enabled, and the voice Q&amp;A feature cannot be used. Please go to settings to enable the necessary permissions.</string>
 </resources>

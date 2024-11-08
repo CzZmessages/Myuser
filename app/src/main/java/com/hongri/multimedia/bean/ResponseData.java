@@ -1,5 +1,6 @@
 package com.hongri.multimedia.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * @description: TODO
  * @date $ $
  */
-public class ResponseData {
+public class ResponseData implements Serializable {
     private int code;
     private String msg;
     private boolean done;

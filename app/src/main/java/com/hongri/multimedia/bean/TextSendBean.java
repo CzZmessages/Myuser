@@ -1,6 +1,8 @@
 package com.hongri.multimedia.bean;
 
-public class TextSendBean {
+import java.io.Serializable;
+
+public class TextSendBean implements Serializable {
     private String message;
     private String chat_id;
 

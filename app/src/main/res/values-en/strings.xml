@@ -4,4 +4,5 @@
     <string name="password">PassWord</string>
     <string name="login">LOGIN</string>
     <string name="title_sub">TIPS</string>
+    <string name="msg">Some permissions are not enabled, and the voice Q&amp;A feature cannot be used. Please go to settings to enable the necessary permissions.</string>
 </resources>

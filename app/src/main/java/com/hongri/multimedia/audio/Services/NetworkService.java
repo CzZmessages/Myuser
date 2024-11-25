@@ -64,12 +64,12 @@ public class NetworkService {
         gson = new Gson();
         // 在构造函数中初始化OkHttpClient并设置超时参数
         client = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS) // 设置连接超时时间为60秒
-                .readTimeout(30, TimeUnit.SECONDS) // 设置读取超时时间为60秒
+                .connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时时间为60秒
+                .readTimeout(10, TimeUnit.SECONDS) // 设置读取超时时间为60秒
                 .build();
         client1 = new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS) // 设置连接超时时间为60秒
-                .readTimeout(30, TimeUnit.SECONDS) // 设置读取超时时间为60秒
+                .connectTimeout(10, TimeUnit.SECONDS) // 设置连接超时时间为60秒
+                .readTimeout(10, TimeUnit.SECONDS) // 设置读取超时时间为60秒
                 .build();
     }
 

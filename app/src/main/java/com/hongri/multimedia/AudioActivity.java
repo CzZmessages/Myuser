@@ -19,6 +19,8 @@ import android.media.AudioFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import com.blankj.utilcode.util.CacheMemoryStaticUtils;
 import com.blankj.utilcode.util.CleanUtils;
 import com.blankj.utilcode.util.FileUtils;
 //import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
@@ -124,13 +127,13 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private final String TAG = "AudioActivity";
     private AudioRecordView audioRecordView;
     private RecordButton recordBtn;
-    private Button check_button;
+    private Button check_button, test_start;
     private AudioPlayView audioPlayView;
     private boolean Granted = false;
     private boolean isRecording = true; // 添加记录录音状态的标志
     private boolean isResetting = false;//队列启动与取消状态！
     private int phoneWidth;
-    private TextView sends, states_ai_messages, messages_title;
+    private TextView sends, states_ai_messages, messages_title, test_check;
     private EditText send_editText;
     private RecordConfig recordConfig;
     private SimpleExoPlayer exoPlayer;
@@ -141,7 +144,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private List<Msg> msgList = new ArrayList<>();
     private MsgAdapter msgAdapter;
     private String lastMessages = "";
-    private String lastSendText = "";
+    private String lastSendText = "0.xO";
     private List<Message> messages;//添加item信息
     private List<String> urlList;
     private StringBuilder itemTextBuilder;
@@ -151,6 +154,9 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private List<String> dataList;
     private ImageView my_user;
     private PopupWindow popupWindow;
+    private Handler handler = new Handler(Looper.getMainLooper());
+    private int count = 0;
+    private boolean isRunning = true;
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     @Override
@@ -167,6 +173,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         clearData();
         initReofit();
         getEmail();
+        testClick();
 //        LogUtils.e("===Activity创建");
     }
 
@@ -182,6 +189,8 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         check_button = findViewById(R.id.check_button);
         states_ai_messages = findViewById(R.id.states_ai_messages);
         messages_title = findViewById(R.id.messages_title);
+        test_check = findViewById(R.id.test_check);
+        test_start = findViewById(R.id.test_start);
         check_button.setOnClickListener(this);
         audioRecordView.setOnClickListener(this);
         recordBtn.setOnClickListener(this);
@@ -212,6 +221,55 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
     }
 
+    private void testClick() {
+        test_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(AudioActivity.this, "开始执行", Toast.LENGTH_LONG).show();
+                testAudio();
+            }
+        });
+    }
+
+    private void testAudio() {
+        //测试录音器
+        // 启动线程
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning && count < 100) {
+                    // 执行方法A
+                    AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_PREPARE);
+                    AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_START);
+                    runOnUiThread(() -> {
+                        test_check.setText("执行录音========执行次数：" + count + "  执行时间:" + TimeUtils.getNowString());
+                    });
+//                    LogUtils.e("执行录音========执行次数：" + count);
+                    try {
+                        Thread.sleep(10000); // 等待10秒
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    // 执行方法B
+                    AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_STOP);
+//                    LogUtils.e("结束录音:");
+                    runOnUiThread(() -> {
+                        test_check.setText("结束录音========执行次数：" + count + "  执行时间:" + TimeUtils.getNowString());
+                    });
+                    try {
+                        Thread.sleep(3000); // 等待3秒
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    count++;
+                }
+                // 关闭线程
+                isRunning = false;
+            }
+        }).start();
+    }
+
 
     private void initListener() {
         AudioRecordManager.getInstance().setRecordStateListener(new RecordStateListener() {
@@ -228,8 +286,8 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
                     case AUDIO_RECORD_START:
                         Log.d(TAG, "status ---> STATUS_START");
-                        checkFile();
-                        states_messagesText(7);//正在录音状态状态
+//                        checkFile();
+//                        states_messagesText(7);//正在录音状态状态
 //                        start.setEnabled(false);
                         break;
 
@@ -242,17 +300,20 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 //                        send.setEnabled(false);
                         break;
                     case AUDIO_RECORD_FINISH:
+//                        LogUtils.e("");
                         Log.d(TAG, "status ---> STATUS_FINISH");
-//                        checkFile();
-                        String filePath = SPUtils.getInstance().getString(Constant.SP_FILE_PATH);
-//                        LogUtils.e("语音地址:" + filePath);
-                        inspectList();
-//                        sendFileNew(filePath, messages);
-                        sendNewFile(filePath, messages);
-                        setEnableSendAndEdF();
-                        states_messagesText(1);
-                        check_button.setVisibility(View.VISIBLE);
-                        audioRecordView.setVisibility(View.GONE);
+////                        checkFile();
+//                        String filePath = SPUtils.getInstance().getString(Constant.SP_FILE_PATH);
+////                        LogUtils.e("语音地址:" + filePath);
+//                        inspectList();
+////                        sendFileNew(filePath, messages);
+//                        sendNewFile(filePath, messages);
+//                        setEnableSendAndEdF();
+//                        states_messagesText(1);
+//                        check_button.setVisibility(View.VISIBLE);
+//                        audioRecordView.setVisibility(View.GONE);
+//                        AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_RELEASE);
+//                        Log.d(TAG, "status -finish--> AUDIO_RECORD_RELEASE");
                         break;
                     case AUDIO_RECORD_CANCEL:
                         Log.d(TAG, "status ---> STATUS_CANCEL");
@@ -515,7 +576,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private String getFileName(String url) {
         int startIndex = url.lastIndexOf("/") + 1; // 找到最后一个"/"之后的起始索引
         String fileName = url.substring(startIndex); // 提取从该索引到字符串结束的所有字符
-        Log.d(TAG, "文件名: " + fileName);
+//        Log.d(TAG, "文件名: " + fileName);
         return fileName;
     }
 
@@ -531,7 +592,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
             if (files != null) {
                 for (File file : files) {
-                    Log.d(TAG, "播放路径" + file.getAbsolutePath());
+//                    Log.d(TAG, "播放路径" + file.getAbsolutePath());
                     audioPaths.add(file.getAbsolutePath());
                 }
             }
@@ -733,35 +794,41 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void updateRecycleViewItem(String itemText, String ask_item) {
-        String nowTime = TimeUtils.getNowString();
-        if (!ask_item.equals(lastSendText)) {
+        try {
+//            LogUtils.e("daxiao："+msgList.size(),itemText,ask_item,lastSendText);
+            String nowTime = TimeUtils.getNowString();
+            if (!ask_item.equals(lastSendText)) {
 //            LogUtils.e("=====》显示发送消息" + ask_item);
-            msgList.add(new Msg(ask_item, nowTime, Msg.TYPE_SENT));//视图数据集  user
-            messages.add(new Message("user", ask_item));//用户问的问题，发给服务端的数据集
-            messages.add(new Message("assistant", itemText));//回答的问题，服务端数据集
-            msgList.add(new Msg(itemText, nowTime, Msg.TYPE_RECEIVED));//视图数据集  assient
+                msgList.add(new Msg(ask_item, nowTime, Msg.TYPE_SENT));//视图数据集  user
+                messages.add(new Message("user", ask_item));//用户问的问题，发给服务端的数据集
+                messages.add(new Message("assistant", itemText));//回答的问题，服务端数据集
+                msgList.add(new Msg(itemText, nowTime, Msg.TYPE_RECEIVED));//视图数据集  assient
 //            dataBuilder.append(itemText);
-            msgAdapter.notifyItemInserted(msgList.size() - 1);
-            lastSendText = ask_item;
-        }
-        LinearLayoutManager ls = (LinearLayoutManager) recyclerView.getLayoutManager();
-        //拼接字符串
-        itemTextBuilder.append(itemText);
-        msgList.set(msgList.size() - 1, new Msg(itemTextBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));
-        // 更新RecyclerView以显示答案
-        msgAdapter.notifyDataSetChanged();
-//        recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
-        recyclerView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // 检查是否已经滚动到底部
-                recyclerView.scrollBy(0,1000); // 滚动到底部
-//                LogUtils.e("300ms后执行延迟刷新");
+                msgAdapter.notifyItemInserted(msgList.size() - 1);
+                lastSendText = ask_item;
             }
-        },300);
-        setEnableSendAndEdT();
-        states_messagesText(6);
+//            LinearLayoutManager ls = (LinearLayoutManager) recyclerView.getLayoutManager();
+            //拼接字符串
+            itemTextBuilder.append(itemText);
+            msgList.set(msgList.size() - 1, new Msg(itemTextBuilder.toString(), nowTime, Msg.TYPE_RECEIVED));
+            // 更新RecyclerView以显示答案
+            msgAdapter.notifyDataSetChanged();
+//        recyclerView.smoothScrollToPosition(msgList.size() - 1); // 滚动到底部
+            recyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // 检查是否已经滚动到底部
+                    recyclerView.scrollBy(0, 1000); // 滚动到底部
+//                LogUtils.e("300ms后执行延迟刷新");
+                }
+            }, 300);
+            setEnableSendAndEdT();
+            states_messagesText(6);
 //        LogUtils.e("原本的消息：" + itemText, "====>接收消息" + itemTextBuilder.toString());
+        } catch (Exception e) {
+            LogUtils.e("" + e);
+        }
+
     }
 
 
@@ -950,25 +1017,25 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private void states_messagesText(int code) {
         switch (code) {
             case 1:
-                states_ai_messages.setText("正在思考...");
+                states_ai_messages.setText("Be thinking...");
                 break;
             case 2:
-                states_ai_messages.setText("正在回答...");
+                states_ai_messages.setText("Be answering...");
                 break;
             case 3:
-                states_ai_messages.setText("已暂停...");
+                states_ai_messages.setText("Paused...");
                 break;
             case 4:
-                states_ai_messages.setText("连接服务器中...");
+                states_ai_messages.setText("Connect to the server...");
                 break;
             case 5:
-                states_ai_messages.setText("连接服务器失败！");
+                states_ai_messages.setText("Failed to connect to server！");
                 break;
             case 6:
-                states_ai_messages.setText("回答完毕");
+                states_ai_messages.setText("Answer finished");
                 break;
             case 7:
-                states_ai_messages.setText("正在录音");
+                states_ai_messages.setText("recording");
                 break;
 
             default:

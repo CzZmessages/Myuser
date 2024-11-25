@@ -19,7 +19,7 @@ public class RetrofitClient {
 
 
     public  Retrofit getClient(String baseUrl) {
-        LogUtils.e("url:"+baseUrl);
+//        LogUtils.e("url:"+baseUrl);
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(30, TimeUnit.SECONDS) // 设置连接超时时间为30秒
                     .readTimeout(30, TimeUnit.SECONDS) // 设置读取超时时间为30秒

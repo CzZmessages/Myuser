@@ -5,9 +5,10 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+//import android.util.Log;
 
 import com.blankj.utilcode.util.FileUtils;
+//import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.hongri.multimedia.audio.fftlib.FftFactory;
@@ -25,7 +26,7 @@ import com.hongri.multimedia.util.ByteUtils;
 import com.hongri.multimedia.util.Constant;
 import com.hongri.multimedia.util.DataUtil;
 import com.hongri.multimedia.util.FileUtil;
-import com.hongri.multimedia.util.Logger;
+//import com.hongri.multimedia.util.Logger;
 import com.hongri.multimedia.util.ShortDataUtils;
 import com.konovalov.vad.Vad;
 import com.konovalov.vad.VadConfig;
@@ -110,7 +111,7 @@ public class AudioRecorder {
     }
 
     private AudioRecorder() {
-        Log.d(TAG, "AudioRecorder");
+//        Log.d(TAG, "AudioRecorder");
         prepareRecord();
 
     }
@@ -174,14 +175,14 @@ public class AudioRecorder {
     public void startRecord() {
         fileName = FileUtil.getFilePath();
         if (audioRecordStatus == AudioRecordStatus.AUDIO_RECORD_START) {
-            Log.d(TAG, "正在录音");
+//            Log.d(TAG, "正在录音");
         }
-        Log.d(TAG, "===startRecord===" + audioRecord.getState());
+//        Log.d(TAG, "===startRecord===" + audioRecord.getState());
 
         resultFile = new File(fileName);
 
         String tempFilePath = FileUtil.getTempFilePath();
-//        LogUtils.e("文件是否创建" + FileUtils.isFileExists(tempFilePath));
+////        LogUtils.e("文件是否创建" + FileUtils.isFileExists(tempFilePath));
 //        if (FileUtils.isFileExists(tempFilePath)) {
 //
 //        } else {
@@ -189,7 +190,7 @@ public class AudioRecorder {
 //            try {
 //                file.createNewFile();
 //            } catch (IOException e) {
-//                LogUtils.e("Messages;"+e.getMessage());
+////                LogUtils.e("Messages;"+e.getMessage());
 //                e.printStackTrace();
 //            }
 //        }
@@ -208,7 +209,7 @@ public class AudioRecorder {
                     initMp3EncoderThread(bufferSizeInBytes);
                 } else {
                     mp3EncodeThread.setFile(new File(fileName));
-                    Logger.e(TAG, "mp3EncodeThread != null, 请检查代码");
+//                    Logger.e(TAG, "mp3EncodeThread != null, 请检查代码");
                 }
             }
         }
@@ -216,6 +217,7 @@ public class AudioRecorder {
         @Override
         public void run() {
             super.run();
+//            LogUtils.e("===========START AUDIO");
             switch (getCurrentConfig().getFormat()) {
                 case MP3:
                     startMp3Recorder();
@@ -229,7 +231,7 @@ public class AudioRecorder {
     }
 
     private void startMp3Recorder() {
-        LogUtils.e("startMp3Recorder");
+//        LogUtils.e("startMp3Recorder");
         audioRecordStatus = AudioRecordStatus.AUDIO_RECORD_START;
         notifyState();
 
@@ -246,7 +248,7 @@ public class AudioRecorder {
             }
             audioRecord.stop();
         } catch (Exception e) {
-            Logger.e(e, TAG, e.getMessage());
+//            Logger.e(e, TAG, e.getMessage());
             notifyError("录音失败");
         }
         if (audioRecordStatus != AudioRecordStatus.AUDIO_RECORD_PAUSE) {
@@ -256,23 +258,23 @@ public class AudioRecorder {
                 stopMp3Encoded();
             }
         } else {
-            Logger.d(TAG, "暂停");
+//            Logger.d(TAG, "暂停");
         }
     }
 
 
     private void startPcmRecorder() {
 
-        LogUtils.e("startPcmRecorder");
+//        LogUtils.e("startPcmRecorder");
         audioRecordStatus = AudioRecordStatus.AUDIO_RECORD_START;
         notifyState();
-        Logger.d(TAG, "开始录制 Pcm");
+//        Logger.d(TAG, "开始录制 Pcm");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(tmpFile);
             audioRecord.startRecording();
             byte[] byteBuffer = new byte[bufferSizeInBytes];
-            LogUtils.e("原始data:" + bufferSizeInBytes);
+//            LogUtils.e("原始data:" + bufferSizeInBytes);
             while (audioRecordStatus == AudioRecordStatus.AUDIO_RECORD_START) {
                 ShortDataUtils.processAudioData(byteBuffer);
                 int end = audioRecord.read(byteBuffer, 0, byteBuffer.length);
@@ -285,10 +287,10 @@ public class AudioRecorder {
             if (audioRecordStatus == AudioRecordStatus.AUDIO_RECORD_STOP) {
                 makeFile();
             } else {
-                Logger.d(TAG, "取消录制...");
+//                Logger.d(TAG, "取消录制...");
             }
         } catch (Exception e) {
-            Logger.e(e, TAG, e.getMessage());
+//            Logger.e(e, TAG, e.getMessage());
             notifyError("录音失败");
         } finally {
             try {
@@ -302,7 +304,7 @@ public class AudioRecorder {
         if (audioRecordStatus != AudioRecordStatus.AUDIO_RECORD_PAUSE) {
             audioRecordStatus = AudioRecordStatus.AUDIO_RECORD_IDLE;
             notifyState();
-            Logger.d(TAG, "录音结束");
+//            Logger.d(TAG, "录音结束");
         }
     }
 
@@ -310,7 +312,7 @@ public class AudioRecorder {
     private void makeFile() {
         switch (currentConfig.getFormat()) {
             case MP3:
-                Log.d(TAG, "返回了MP3");
+//                Log.d(TAG, "返回了MP3");
                 return;
             case WAV:
                 mergePcmFile();
@@ -323,7 +325,7 @@ public class AudioRecorder {
                 break;
         }
         notifyFinish();
-        Logger.i(TAG, "录音完成！ path: %s ； 大小：%s", resultFile.getAbsoluteFile(), resultFile.length());
+//        Logger.i(TAG, "录音完成！ path: %s ； 大小：%s", resultFile.getAbsoluteFile(), resultFile.length());
     }
 
     /**
@@ -375,7 +377,7 @@ public class AudioRecorder {
                 inputStream.close();
             }
         } catch (Exception e) {
-            Logger.e(e, TAG, e.getMessage());
+//            Logger.e(e, TAG, e.getMessage());
             return false;
         } finally {
             try {
@@ -408,7 +410,7 @@ public class AudioRecorder {
                 }
             });
         } else {
-            Logger.e(TAG, "mp3EncodeThread is null, 代码业务流程有误，请检查！！ ");
+//            Logger.e(TAG, "mp3EncodeThread is null, 代码业务流程有误，请检查！！ ");
         }
     }
 
@@ -423,7 +425,7 @@ public class AudioRecorder {
                 }
             });
         } else {
-            Logger.e(TAG, "mp3EncodeThread is null, 代码业务流程有误，请检查！！ ");
+//            Logger.e(TAG, "mp3EncodeThread is null, 代码业务流程有误，请检查！！ ");
         }
     }
 
@@ -432,7 +434,7 @@ public class AudioRecorder {
             mp3EncodeThread = new Mp3EncodeThread(new File(fileName), bufferSize);
             mp3EncodeThread.start();
         } catch (Exception e) {
-            Logger.e(e, TAG, e.getMessage());
+//            Logger.e(e, TAG, e.getMessage());
         }
     }
 
@@ -464,7 +466,7 @@ public class AudioRecorder {
     }
 
     private void notifyFinish() {
-        Logger.d(TAG, "录音结束 file: %s", resultFile.getAbsolutePath());
+//        Logger.d(TAG, "录音结束 file: %s", resultFile.getAbsolutePath());
         SPUtils.getInstance().put(Constant.SP_FILE_PATH, resultFile.getAbsolutePath());
         SPUtils.getInstance("test").put("test",resultFile.getAbsolutePath());
         mainHandler.post(new Runnable() {
@@ -484,9 +486,9 @@ public class AudioRecorder {
      * 暂停录音
      */
     public void pauseRecord() {
-        Log.d(TAG, "===pauseRecord===");
+//        Log.d(TAG, "===pauseRecord===");
         if (audioRecordStatus != AudioRecordStatus.AUDIO_RECORD_START) {
-            Log.d(TAG, "没有在录音");
+//            Log.d(TAG, "没有在录音");
         } else {
             audioRecord.stop();
             audioRecordStatus = AudioRecordStatus.AUDIO_RECORD_PAUSE;
@@ -498,9 +500,9 @@ public class AudioRecorder {
      * 停止录音
      */
     public void stopRecord() {
-        Log.d(TAG, "===stopRecord===");
+//        Log.d(TAG, "===stopRecord===");
         if (audioRecordStatus == AudioRecordStatus.AUDIO_RECORD_IDLE || audioRecordStatus == AudioRecordStatus.AUDIO_RECORD_PREPARE) {
-            Log.d(TAG, "录音尚未开始");
+//            Log.d(TAG, "录音尚未开始");
         } else {
             audioRecord.stop();
             audioRecordStatus = AudioRecordStatus.AUDIO_RECORD_STOP;
@@ -512,7 +514,7 @@ public class AudioRecorder {
      * 取消录音
      */
     public void cancelRecord() {
-        Log.d(TAG, "===cancelRecord===");
+//        Log.d(TAG, "===cancelRecord===");
         audioRecordStatus = AudioRecordStatus.AUDIO_RECORD_CANCEL;
         notifyState();
     }
@@ -521,7 +523,7 @@ public class AudioRecorder {
      * 销毁(释放)录音实例
      */
     public void releaseRecord() {
-        Log.d(TAG, "===releaseRecord===");
+//        Log.d(TAG, "===releaseRecord===");
         if (audioRecord != null) {
             audioRecord.release();
             audioRecord = null;

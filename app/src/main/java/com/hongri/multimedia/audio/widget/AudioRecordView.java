@@ -99,8 +99,8 @@ public class AudioRecordView extends FrameLayout implements RecordSoundSizeListe
                 recordBtnHeight = recordBtn.getHeight();
                 recordBtnBottomY = recordBtnTopY + recordBtnHeight;
 
-                Log.d(TAG, "onLayout---> recordBtnLeftX:" + recordBtnLeftX + " recordBtnWidth:" + recordBtnWidth + " recordBtnRightX:" + recordBtnRightX);
-                Log.d(TAG, "onLayout---> recordBtnTopY:" + recordBtnTopY + " recordBtnHeight:" + recordBtnHeight + " recordBtnBottomY:" + recordBtnBottomY);
+//                Log.d(TAG, "onLayout---> recordBtnLeftX:" + recordBtnLeftX + " recordBtnWidth:" + recordBtnWidth + " recordBtnRightX:" + recordBtnRightX);
+//                Log.d(TAG, "onLayout---> recordBtnTopY:" + recordBtnTopY + " recordBtnHeight:" + recordBtnHeight + " recordBtnBottomY:" + recordBtnBottomY);
             }
             if(childView2 instanceof WaveView){
                 waveView=(WaveView) childView2;
@@ -145,14 +145,14 @@ public class AudioRecordView extends FrameLayout implements RecordSoundSizeListe
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if (activity == null || recordBtn == null ) {
-            LogUtils.e("btn为空"+isPressed);
+//            LogUtils.e("btn为空"+isPressed);
             return false;
         }
 
         lastTouchX = event.getX();
         lastTouchY = event.getY();
         if(!isPointInRecordRect(lastTouchX, lastTouchY)){
-            LogUtils.e("不在点击范围内，不执行任何操作");
+//            LogUtils.e("不在点击范围内，不执行任何操作");
             return false;
         }
         int action = event.getAction();
@@ -163,7 +163,7 @@ public class AudioRecordView extends FrameLayout implements RecordSoundSizeListe
                     //停止并清理上一次的录音环境
 
                     //开始录音
-                    LogUtils.e("RBtn手按下开始初始化开始录音");
+//                    LogUtils.e("RBtn手按下开始初始化开始录音");
                     isPressed = true;
 //                    timeTv.setText("00:00");
                     if (handler != null) {
@@ -189,7 +189,7 @@ public class AudioRecordView extends FrameLayout implements RecordSoundSizeListe
                     }
                 } else {
                     //结束录音
-                    LogUtils.e("RBtn手抬起，判断录音状态==结束录音");
+//                    LogUtils.e("RBtn手抬起，判断录音状态==结束录音");
                     //停止vad
 //                    vad.stop();
                     //切换回去audio
@@ -237,7 +237,7 @@ public class AudioRecordView extends FrameLayout implements RecordSoundSizeListe
                     @Override
                     public void onSpeechDetected() {
                         lastSpeechTime = System.currentTimeMillis(); // 更新最后说话时间
-                        LogUtils.e("有人说话====");
+//                        LogUtils.e("有人说话====");
                         taskExecuted = false; // 重置任务执行标记
                     }
 
@@ -249,14 +249,14 @@ public class AudioRecordView extends FrameLayout implements RecordSoundSizeListe
                           ThreadUtils.runOnUiThread(()->executeTaskOnce()) ;//UI动作的更新必须切换至主线程UI
                             taskExecuted = true; // 标记任务已执行
                         }
-                        LogUtils.e("没人说话====");
+//                        LogUtils.e("没人说话====");
                     }
                 });
             }
         });
    }
    private void executeTaskOnce(){
-        LogUtils.e("执行自动结束录音");
+//        LogUtils.e("执行自动结束录音");
         //重置状态
        recordBtn.setBackgroundResource(R.mipmap.audio);
        waveView.stopAn();

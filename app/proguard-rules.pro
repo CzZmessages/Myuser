@@ -65,27 +65,38 @@
 -keep class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }
-
+#audio不做混淆
+-keep class com.hongri.multimedia.audio.**{*;}
 #第三方jar包不被混淆
 -keep class com.github.test.** {*;}
 #保留bean不被混淆
 -keep class com.hongri.multimedia.bean.**{*;}
 
 #保留自定义的Test类和类成员不被混淆
--keep class com.lily.Test {*;}
+-keep class com.hongri.multimedia.audio.** {*;}
 #保留自定义的xlog文件夹下面的类、类成员和方法不被混淆
 -keep class com.test.xlog.** {
     <fields>;
     <methods>;
 }
 
-#assume no side effects:删除android.util.Log输出的日志
+# 不混淆log
 -assumenosideeffects class android.util.Log {
-    public static *** v(...);
-    public static *** d(...);
-    public static *** i(...);
-    public static *** w(...);
-    public static *** e(...);
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
+#关闭sout输出
+-assumenosideeffects class java.io.PrintStream {
+
+public void println(...);
+
+public void print(...);
+
 }
 # 保留Serializable序列化的类不被混淆
 -keepclassmembers class * implements java.io.Serializable {

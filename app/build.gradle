@@ -4,7 +4,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.2"
+//    buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "com.hongri.multimedia"
@@ -37,10 +37,15 @@ android {
 //        jni.srcDirs = []//disable automatic ndk-build call
 //        jniLibs.srcDirs = ['libs']
 //    }
-    android.applicationVariants.all{ variant ->
-        variant.outputs.all{
-            def createTime = new Date().format("YYYYMMddhhmm", TimeZone.getTimeZone("GMT+08:00"))
-            def fileName = "${project.name}_${buildType.name}_v${defaultConfig.versionName}_${createTime}.apk"
+    android.applicationVariants.all{ variant ->//pwd lenkeng
+        variant.outputs.all {
+            def createTime = new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08:00"))
+            def fileName
+            if (variant.buildType.name == 'debug') {
+                fileName = "${project.name}_${variant.buildType.name}_v${variant.versionName}_${createTime}.apk"
+            } else if (variant.buildType.name == 'release') {
+                fileName = "AnswerAssistant_V_${variant.versionName}.apk"
+            }
             outputFileName = fileName
         }
     }

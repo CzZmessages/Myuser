@@ -15,8 +15,8 @@
 #google推荐算法
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 
-# 避免混淆Annotation、内部类、泛型、匿名类
--keepattributes *Annotation*,InnerClasses,Signature,EnclosingMethod
+    # 避免混淆Annotation、内部类、泛型、匿名类
+    -keepattributes *Annotation*,InnerClasses,Signature,EnclosingMethod
 
 # 重命名抛出异常时的文件名称
 -renamesourcefileattribute SourceFile

@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="200dp"
             android:layout_height="130dp"
-            android:src="@mipmap/ans"
+            android:src="@mipmap/newlogin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -40,11 +40,12 @@
             android:id="@+id/ut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:text="@string/username"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="21sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/username"
             app:layout_constraintLeft_toLeftOf="@+id/username"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,21 +56,24 @@
             android:layout_marginLeft="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/ed_bg"
-            android:hint="Input Username"
+            android:hint="Input username"
             android:paddingStart="10dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ut" />
+            app:layout_constraintTop_toBottomOf="@id/ut"
+
+            />
 
         <TextView
             android:id="@+id/pdt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:text="@string/password"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="21sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/password"
             app:layout_constraintLeft_toLeftOf="@+id/password"
             app:layout_constraintTop_toBottomOf="@id/username" />
         <EditText
@@ -80,20 +84,21 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pdt"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:background="@drawable/ed_bg"
-            android:layout_marginTop="10dp"
             app:layout_goneMarginLeft="50dp"
             android:paddingStart="10dp"
-            android:hint="Input PassWord"
+            android:hint="Input password"
             />
         <Button
             android:id="@+id/login_btn"
             android:layout_width="307dp"
             android:layout_height="42dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/password"
+            app:layout_constraintLeft_toLeftOf="@+id/password"
+            app:layout_constraintTop_toBottomOf="@id/password"
             android:background="@mipmap/login_btn"
             android:text="@string/login"
             android:textColor="@color/white"

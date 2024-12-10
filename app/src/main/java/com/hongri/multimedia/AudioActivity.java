@@ -168,7 +168,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         initRecyclerView();
         initListener();
         initializeExoPlayer();
-        checkDevices();
+//        checkDevices();
         setStatusBar();
         clearData();
         initReofit();
@@ -218,14 +218,13 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         gson = new Gson();
         //判定文件是否存在 不存在就创建
         FileUtils.createOrExistsDir(fileDir);
-
     }
 
     private void testClick() {
         test_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AudioActivity.this, "开始执行", Toast.LENGTH_LONG).show();
+                Toast.makeText(AudioActivity.this, "begin to enforce", Toast.LENGTH_LONG).show();
                 testAudio();
             }
         });
@@ -286,8 +285,8 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
 
                     case AUDIO_RECORD_START:
                         Log.d(TAG, "status ---> STATUS_START");
-//                        checkFile();
-//                        states_messagesText(7);//正在录音状态状态
+                        checkFile();
+                        states_messagesText(7);//正在录音状态状态
 //                        start.setEnabled(false);
                         break;
 
@@ -302,18 +301,18 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                     case AUDIO_RECORD_FINISH:
 //                        LogUtils.e("");
                         Log.d(TAG, "status ---> STATUS_FINISH");
-////                        checkFile();
-//                        String filePath = SPUtils.getInstance().getString(Constant.SP_FILE_PATH);
-////                        LogUtils.e("语音地址:" + filePath);
-//                        inspectList();
-////                        sendFileNew(filePath, messages);
-//                        sendNewFile(filePath, messages);
-//                        setEnableSendAndEdF();
-//                        states_messagesText(1);
-//                        check_button.setVisibility(View.VISIBLE);
-//                        audioRecordView.setVisibility(View.GONE);
-//                        AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_RELEASE);
-//                        Log.d(TAG, "status -finish--> AUDIO_RECORD_RELEASE");
+//                        checkFile();
+                        String filePath = SPUtils.getInstance().getString(Constant.SP_FILE_PATH);
+                        LogUtils.e("语音地址:" + filePath);
+                        inspectList();
+//                        sendFileNew(filePath, messages);
+                        sendNewFile(filePath, messages);
+                        setEnableSendAndEdF();
+                        states_messagesText(1);
+                        check_button.setVisibility(View.VISIBLE);
+                        audioRecordView.setVisibility(View.GONE);
+                        AudioRecordManager.getInstance().setStatus(AudioRecordStatus.AUDIO_RECORD_RELEASE);
+                        Log.d(TAG, "status -finish--> AUDIO_RECORD_RELEASE");
                         break;
                     case AUDIO_RECORD_CANCEL:
                         Log.d(TAG, "status ---> STATUS_CANCEL");
@@ -519,10 +518,10 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
             case R.id.recordBtn:
                 if (isRecording) {
                     Granted = true;
-//                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==录音");
+                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==录音");
 
                 } else {
-//                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==结束录音");
+                    LogUtils.e(TAG, "status_Activity界面==接收==>按下按钮==结束录音");
 
                 }
                 isRecording = !isRecording;
@@ -539,7 +538,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.check_button:
                 if (Granted) {
-                    Toast.makeText(this, "正在思考", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Be thinking", Toast.LENGTH_LONG).show();
                     return;
                 }
                 //---
@@ -556,7 +555,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     private void getAndSend() {
         String content = send_editText.getText().toString();
         if (content.isEmpty()) {
-            Toast.makeText(this, "请输入需要问答的问题", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter the questions to be answered", Toast.LENGTH_LONG).show();
             return;
         }
         inspectList();
@@ -654,7 +653,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                 check_button.setVisibility(View.GONE);
                 audioRecordView.setVisibility(View.VISIBLE);
                 // 如果所有音频都已播放，可以在这里做一些清理或提示操作
-                states_ai_messages.setText("回答完毕");
+                states_ai_messages.setText("Answer finished");
                 states_messagesText(6);
             }
         }
@@ -775,7 +774,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                 } else {
 //                    LogUtils.e("请求失败！");
                     runOnUiThread(() -> {
-                        Toast.makeText(AudioActivity.this, "请求失败，请检查是否有网络！", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AudioActivity.this, "The request failed. Please check whether there is a network！", Toast.LENGTH_LONG).show();
                     });
                 }
             }
@@ -905,7 +904,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         answerBuilder.setLength(0);
                         setEnableSendAndEdT();
                         runOnUiThread(() -> {
-                            Toast.makeText(AudioActivity.this, "登录时效已过期，请重新登录！", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AudioActivity.this, "The login period has expired. Please log in again！", Toast.LENGTH_LONG).show();
                         });
                         break;
                     case Constant.REQUEST_FAIL_READ:
@@ -1052,11 +1051,11 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(this);
 
-        normalDialog.setTitle("提示");
+        normalDialog.setTitle("Tips");
         normalDialog.setMessage("根据Android10版本安全协议，未签名的应用首次启动无法立即使用麦克风\n" +
                 "你必须重启来正常使用该功能,由于当前属于deBUG版本且属于普通应用，第一次冷启动系统并不会给予初始化的硬件依赖支持。\n" +
                 "如果第一次安装启动已二次重启，则可以忽略该提示。");
-        normalDialog.setPositiveButton("重启",
+        normalDialog.setPositiveButton("restart",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -1064,7 +1063,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
                         AppUtils.relaunchApp(true);
                     }
                 });
-        normalDialog.setNegativeButton("关闭",
+        normalDialog.setNegativeButton("close",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -1104,7 +1103,7 @@ public class AudioActivity extends BaseActivity implements View.OnClickListener 
     @Download.onTaskFail
     void onTaskFail(DownloadTask task) {
 //        LogUtils.e(TAG, "下载出现异常" + task.getFilePath() + "  message" + task.getDownloadUrl());
-        Toast.makeText(this, "下载语音出现异常", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "The download voice is abnormal", Toast.LENGTH_LONG).show();
 
     }
 

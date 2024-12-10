@@ -81,10 +81,10 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         initView();
         initReflect();
-//        ThreadUtils.runOnUiThreadDelayed(()->{
-//            Toast.makeText(LoginActivity.this,"正常检查登录状态",Toast.LENGTH_LONG).show();
-//            getChat_id();
-//        },1000);
+        ThreadUtils.runOnUiThreadDelayed(()->{
+            Toast.makeText(LoginActivity.this,"Checked login states",Toast.LENGTH_LONG).show();
+            getChat_id();
+        },1000);
         addListener();
         getPermission();
     }
@@ -123,11 +123,11 @@ public class LoginActivity extends BaseActivity {
         String u_name = username.getText().toString();
         String p_word = password.getText().toString();
         if (u_name.trim().isEmpty()) {
-            Toast.makeText(this, "请输入账号！", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter your account number！", Toast.LENGTH_LONG).show();
             return;
         }
         if (p_word.trim().isEmpty()) {
-            Toast.makeText(this, "请输入账号！", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter your account password！", Toast.LENGTH_LONG).show();
             return;
         }
 //        LogUtils.e("msg：" + u_name, p_word);
@@ -146,21 +146,21 @@ public class LoginActivity extends BaseActivity {
                         MsgData data = gson.fromJson(msg, MsgData.class);
 //                        LogUtils.e("code:" + data.getCode(), data.getMessage(), data.getData());
                         if (data.getCode() == 200) {
-                            Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Login Success！", Toast.LENGTH_LONG).show();
 //                            LogUtils.e("登录成功获取的token:" + data.getData());
                             SPUtils.getInstance().put("dataHeader", data.getData());
                             SPUtils.getInstance().put("user", userBean.getUsername());
                             getChat_id();
 
                         } else {
-                            Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Login Fail！", Toast.LENGTH_LONG).show();
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 } else {
                     //登录失败！
-                    Toast.makeText(LoginActivity.this, "登录失败！！", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Login Fail！！", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -221,19 +221,19 @@ public class LoginActivity extends BaseActivity {
                             @Override
                             public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
                                 if (allGranted) {
-                                    Toast.makeText(LoginActivity.this, "权限已获取", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, "Permission obtained", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "权限未全部获取，这将会显著影响你的使用！", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, "Not all permissions are obtained, which \nwill significantly affect your usage！", Toast.LENGTH_LONG).show();
                                 }
                             }
 
                             @Override
                             public void onDenied(@NonNull List<String> permissions, boolean doNotAskAgain) {
                                 if (doNotAskAgain) {
-                                    Toast.makeText(LoginActivity.this, "权限被永久拒绝，请手动授予相关权限！", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, "Permission is permanently denied.\n Please grant the permission manually！", Toast.LENGTH_LONG).show();
                                 } else {
                                     dialog.show();
-                                    Toast.makeText(LoginActivity.this, "权限获取失败", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, "Permission fail!", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -246,7 +246,8 @@ public class LoginActivity extends BaseActivity {
         if (!PermissionUtils.isGranted(Permission.Group.STORAGE)) {
             PermissionUtils.permission(Permission.Group.STORAGE).request();
         } else {
-            Toast.makeText(LoginActivity.this, "存储权限已获取", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, "The storage permission has been obtained", Toast.LENGTH_LONG).show();
+            return;
         }
         if(!PermissionUtils.isGranted(Constant.permissionGroup)){
             if(SPUtils.getInstance().getBoolean("remember",false)){

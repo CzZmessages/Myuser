@@ -114,6 +114,7 @@
         app:layout_constraintTop_toBottomOf="@id/states_ai_messages">
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/test_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -124,6 +125,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <Button
+            android:visibility="gone"
             android:id="@+id/test_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -148,7 +150,7 @@
             android:id="@+id/recordLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
